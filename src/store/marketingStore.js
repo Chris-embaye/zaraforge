@@ -14,7 +14,7 @@ export const DEFAULT_COPY = {
 // ── Default landing page pricing (separate from adminStore billing config) ────
 export const DEFAULT_MARKETING_PRICING = {
   free:       { name: 'Free',       monthly: 0,  annual: 0  },
-  pro:        { name: 'Pro',        monthly: 20, annual: 16 },
+  pro:        { name: 'Pro',        monthly: 29, annual: 23 },
   enterprise: { name: 'Enterprise', monthly: 99, annual: 79 },
 }
 
