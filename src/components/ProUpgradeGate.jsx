@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import { createPortal } from 'react-dom'
 import { useBuilderStore } from '../store/builderStore'
 
 const MONTHLY_PRICE = 29
@@ -43,7 +44,7 @@ export default function ProUpgradeGate({ reason = 'gen_limit', onClose }) {
     window.open(stripe, '_blank')
   }
 
-  return (
+  return createPortal(
     <div style={{
       position: 'fixed', inset: 0, zIndex: 9999,
       display: 'flex', alignItems: 'center', justifyContent: 'center',
@@ -170,5 +171,5 @@ export default function ProUpgradeGate({ reason = 'gen_limit', onClose }) {
         </div>
       </div>
     </div>
-  )
+  , document.body)
 }
