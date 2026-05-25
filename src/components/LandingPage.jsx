@@ -26,7 +26,7 @@ const INFRA_TASKS = [
 ]
 
 const FREE_F = ['AI Builder — 25 daily generations', 'Studio DAW with 4 tracks', 'Logo Maker — 10 exports / month', 'BG Remover — browser-native ML', 'Auth & basic database', 'Built-in hosting on zaraforge.app']
-const PRO_F  = ['Unlimited AI generation credits', 'Studio — unlimited tracks & projects', 'Advanced AI vector & logo tools', 'Multiplayer collaboration', 'Priority cloud hosting & custom domains', 'Full version history & restore']
+const PRO_F  = ['Unlimited AI generation credits', 'Studio — unlimited tracks & projects', 'Advanced AI vector & logo tools', 'Multiplayer collaboration', 'Priority cloud hosting & custom domains', 'Full version history & restore', 'Live Device Mirror — scan QR, preview on real phone instantly']
 
 // ── Tiny helpers ──────────────────────────────────────────────────────────────
 function Arrow({ size = 14 }) {
@@ -307,11 +307,12 @@ const CSS = `
 @media (max-width: 960px) {
   .lp-suite-grid { grid-template-columns: 1fr 1fr !important; }
   .lp-suite-grid .lp-c-builder { grid-column: 1 / 3 !important; }
-  .lp-infra-grid, .lp-about-grid { grid-template-columns: 1fr !important; }
+  .lp-infra-grid, .lp-about-grid, .lp-mirror-grid { grid-template-columns: 1fr !important; }
   .lp-nav-center { display: none !important; }
   .lp-hero-sec { padding: 90px 24px 110px !important; }
   .lp-section { padding: 80px 24px !important; }
   .lp-nav-inner { padding: 0 20px !important; }
+  .lp-mirror-phone { display: none !important; }
 }
 @media (max-width: 600px) {
   .lp-suite-grid { grid-template-columns: 1fr !important; }
@@ -657,6 +658,221 @@ export default function LandingPage() {
                   <div style={{ width: 44, height: 44, borderRadius: '50%', background: 'rgba(245,158,11,0.15)', border: '1.5px dashed rgba(245,158,11,0.4)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 20 }}>✂️</div>
                 </div>
                 <span style={{ fontSize: 9.5, fontWeight: 700, padding: '3px 8px', borderRadius: 99, background: 'rgba(245,158,11,0.1)', color: '#fbbf24', border: '1px solid rgba(245,158,11,0.2)' }}>On-Device ML</span>
+              </div>
+
+            </div>
+          </div>
+        </section>
+
+        {/* ━━━━━━━━━━━━━━  PHONE MIRROR FEATURE  ━━━━━━━━━━━━━━ */}
+        <section className="lp-section" style={{ padding: '110px 32px', background: 'linear-gradient(180deg, #090A0F 0%, #070810 100%)', borderTop: '1px solid rgba(255,255,255,0.04)', position: 'relative', overflow: 'hidden' }}>
+          {/* Glow blob */}
+          <div style={{ position: 'absolute', top: '10%', right: '-10%', width: '45%', height: '80%', borderRadius: '50%', background: 'radial-gradient(ellipse, rgba(0,229,255,0.07) 0%, transparent 70%)', pointerEvents: 'none' }} />
+          <div style={{ position: 'absolute', bottom: '0%', left: '-8%', width: '35%', height: '60%', borderRadius: '50%', background: 'radial-gradient(ellipse, rgba(167,139,250,0.06) 0%, transparent 70%)', pointerEvents: 'none' }} />
+
+          <div style={{ maxWidth: 1180, margin: '0 auto', position: 'relative', zIndex: 1 }}>
+            <div className="lp-mirror-grid" style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 64, alignItems: 'center' }}>
+
+              {/* Left: copy */}
+              <div className="lp-reveal">
+                {/* Pro badge */}
+                <div style={{
+                  display: 'inline-flex', alignItems: 'center', gap: 7,
+                  padding: '5px 14px', borderRadius: 99, marginBottom: 28,
+                  background: 'rgba(52,211,153,0.08)', border: '1px solid rgba(52,211,153,0.22)',
+                  fontSize: 11, fontWeight: 800, letterSpacing: '0.09em', textTransform: 'uppercase', color: '#34d399',
+                }}>
+                  <svg width="9" height="9" viewBox="0 0 24 24" fill="currentColor"><path d="M12 1L3 5v6c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V5l-9-4z"/></svg>
+                  Pro Feature
+                </div>
+
+                <h2 style={{ fontSize: 'clamp(28px, 3.5vw, 46px)', fontWeight: 900, letterSpacing: '-0.026em', color: '#f1f5f9', lineHeight: 1.1, marginBottom: 20 }}>
+                  See your design<br />on a real phone — live.
+                </h2>
+                <p style={{ fontSize: 16, color: 'rgba(255,255,255,0.4)', lineHeight: 1.85, marginBottom: 36, maxWidth: 430 }}>
+                  Open the builder, click <strong style={{ color: 'rgba(255,255,255,0.65)', fontWeight: 700 }}>Connect Phone</strong>, and scan the QR code. Your canvas streams to the device in real-time — every component, every change, instantly visible on any iOS or Android phone.
+                </p>
+
+                {[
+                  ['📱', 'Scan once, stay synced', 'Canvas updates push to your phone every few seconds automatically.'],
+                  ['⚡', 'No app install needed', 'Opens directly in Safari or Chrome — zero friction for you or your clients.'],
+                  ['🔒', 'Session-locked stream', 'Each session has a unique ID — only your phone sees your canvas.'],
+                ].map(([icon, title, desc]) => (
+                  <div key={title} style={{ display: 'flex', alignItems: 'flex-start', gap: 14, marginBottom: 20 }}>
+                    <div style={{
+                      width: 38, height: 38, borderRadius: 11, flexShrink: 0,
+                      background: 'rgba(0,229,255,0.07)', border: '1px solid rgba(0,229,255,0.14)',
+                      display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 16,
+                    }}>{icon}</div>
+                    <div>
+                      <h4 style={{ fontSize: 14, fontWeight: 700, color: '#e2e8f0', marginBottom: 3 }}>{title}</h4>
+                      <p style={{ fontSize: 12.5, color: 'rgba(255,255,255,0.32)', lineHeight: 1.6 }}>{desc}</p>
+                    </div>
+                  </div>
+                ))}
+
+                <button onClick={() => window.open('https://buy.stripe.com/6oU3cwa6T5gK3NeeOD3ZK01', '_blank')} style={{
+                  marginTop: 12, display: 'inline-flex', alignItems: 'center', gap: 10,
+                  padding: '13px 26px', borderRadius: 12, fontSize: 14, fontWeight: 700,
+                  cursor: 'pointer', fontFamily: 'inherit', border: 'none',
+                  background: 'linear-gradient(135deg, #059669 0%, #10b981 100%)',
+                  color: '#fff', boxShadow: '0 6px 24px rgba(16,185,129,0.3)',
+                  transition: 'all 0.2s',
+                }}>
+                  Unlock with Pro <Arrow size={13} />
+                </button>
+              </div>
+
+              {/* Right: phone mockup */}
+              <div className="lp-reveal lp-d1 lp-mirror-phone" style={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
+                <div style={{ position: 'relative' }}>
+                  {/* Glow ring behind phone */}
+                  <div style={{
+                    position: 'absolute', inset: -24, borderRadius: '50%',
+                    background: 'radial-gradient(ellipse, rgba(0,229,255,0.12) 0%, transparent 70%)',
+                    filter: 'blur(8px)', animation: 'lpFlagGlow 3.5s ease-in-out infinite',
+                  }} />
+
+                  {/* Phone shell */}
+                  <div style={{
+                    position: 'relative', width: 220, borderRadius: 38,
+                    background: 'linear-gradient(160deg, #1a1a28, #0d0d18)',
+                    border: '2px solid rgba(0,229,255,0.18)',
+                    boxShadow: '0 0 0 1px rgba(0,229,255,0.08), 0 32px 80px rgba(0,0,0,0.7), inset 0 1px 0 rgba(255,255,255,0.06)',
+                    padding: '14px 10px',
+                  }}>
+                    {/* Notch / dynamic island */}
+                    <div style={{ display: 'flex', justifyContent: 'center', marginBottom: 10 }}>
+                      <div style={{ width: 72, height: 22, borderRadius: 99, background: '#0a0a12', border: '1px solid rgba(255,255,255,0.05)' }} />
+                    </div>
+
+                    {/* Screen area */}
+                    <div style={{
+                      borderRadius: 24, overflow: 'hidden',
+                      background: '#09090b', minHeight: 360,
+                      border: '1px solid rgba(255,255,255,0.05)',
+                      display: 'flex', flexDirection: 'column',
+                    }}>
+                      {/* Status bar */}
+                      <div style={{ padding: '8px 14px 4px', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                        <span style={{ fontSize: 9, fontWeight: 700, color: 'rgba(255,255,255,0.5)', fontFamily: 'monospace' }}>9:41</span>
+                        <div style={{ display: 'flex', gap: 4, alignItems: 'center' }}>
+                          {[3,5,7].map(h => <div key={h} style={{ width: 3, height: h, borderRadius: 1, background: 'rgba(255,255,255,0.4)' }} />)}
+                          <div style={{ width: 14, height: 7, borderRadius: 2, border: '1px solid rgba(255,255,255,0.3)', marginLeft: 3, padding: '1px 1px' }}>
+                            <div style={{ width: '75%', height: '100%', background: '#34d399', borderRadius: 1 }} />
+                          </div>
+                        </div>
+                      </div>
+
+                      {/* Builder canvas content */}
+                      <div style={{ flex: 1, padding: '10px 12px', display: 'flex', flexDirection: 'column', gap: 8 }}>
+                        {/* Mock nav bar */}
+                        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '8px 10px', borderRadius: 9, background: 'rgba(255,255,255,0.03)', border: '1px solid rgba(255,255,255,0.05)' }}>
+                          <div style={{ width: 50, height: 7, borderRadius: 4, background: 'rgba(255,255,255,0.12)' }} />
+                          <div style={{ display: 'flex', gap: 5 }}>
+                            {[1,2,3].map(i => <div key={i} style={{ width: 18, height: 6, borderRadius: 3, background: 'rgba(255,255,255,0.07)' }} />)}
+                          </div>
+                        </div>
+                        {/* Mock hero */}
+                        <div style={{ borderRadius: 10, background: 'linear-gradient(135deg, rgba(99,102,241,0.18), rgba(0,229,255,0.1))', border: '1px solid rgba(99,102,241,0.2)', padding: '18px 12px', textAlign: 'center' }}>
+                          <div style={{ width: '70%', height: 8, borderRadius: 4, background: 'rgba(255,255,255,0.2)', margin: '0 auto 8px' }} />
+                          <div style={{ width: '55%', height: 6, borderRadius: 4, background: 'rgba(255,255,255,0.1)', margin: '0 auto 14px' }} />
+                          <div style={{ display: 'inline-block', padding: '6px 16px', borderRadius: 7, background: 'rgba(16,185,129,0.25)', border: '1px solid rgba(16,185,129,0.35)' }}>
+                            <div style={{ width: 44, height: 6, borderRadius: 3, background: '#34d399' }} />
+                          </div>
+                        </div>
+                        {/* Mock feature cards */}
+                        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 6 }}>
+                          {['rgba(59,130,246,0.12)','rgba(245,158,11,0.12)','rgba(220,38,38,0.1)','rgba(167,139,250,0.12)'].map((bg,i) => (
+                            <div key={i} style={{ borderRadius: 8, background: bg, border: `1px solid ${bg.replace('0.1','0.22').replace('0.12','0.22')}`, padding: '10px 8px' }}>
+                              <div style={{ width: 14, height: 14, borderRadius: 4, background: 'rgba(255,255,255,0.1)', marginBottom: 6 }} />
+                              <div style={{ width: '80%', height: 5, borderRadius: 3, background: 'rgba(255,255,255,0.15)', marginBottom: 4 }} />
+                              <div style={{ width: '60%', height: 4, borderRadius: 3, background: 'rgba(255,255,255,0.07)' }} />
+                            </div>
+                          ))}
+                        </div>
+                        {/* Live badge at bottom */}
+                        <div style={{ marginTop: 'auto', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 6, padding: '6px 10px', borderRadius: 7, background: 'rgba(0,229,255,0.05)', border: '1px solid rgba(0,229,255,0.12)' }}>
+                          <div style={{ width: 6, height: 6, borderRadius: '50%', background: '#00e5ff', animation: 'lpLive 1.8s ease-in-out infinite' }} />
+                          <span style={{ fontSize: 8.5, fontWeight: 700, color: '#00e5ff', letterSpacing: '0.06em', textTransform: 'uppercase' }}>Live Preview · Syncing</span>
+                        </div>
+                      </div>
+
+                      {/* Home indicator */}
+                      <div style={{ display: 'flex', justifyContent: 'center', padding: '8px 0' }}>
+                        <div style={{ width: 40, height: 4, borderRadius: 2, background: 'rgba(255,255,255,0.12)' }} />
+                      </div>
+                    </div>
+
+                    {/* Side buttons */}
+                    <div style={{ position: 'absolute', right: -4, top: 80, width: 3, height: 32, borderRadius: 2, background: 'rgba(0,229,255,0.15)' }} />
+                    <div style={{ position: 'absolute', left: -4, top: 72, width: 3, height: 22, borderRadius: 2, background: 'rgba(255,255,255,0.08)' }} />
+                    <div style={{ position: 'absolute', left: -4, top: 102, width: 3, height: 22, borderRadius: 2, background: 'rgba(255,255,255,0.08)' }} />
+                  </div>
+
+                  {/* QR code label floating below phone */}
+                  <div style={{
+                    marginTop: 18, display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 10,
+                  }}>
+                    {/* Mini QR box */}
+                    <div style={{
+                      width: 64, height: 64, borderRadius: 10,
+                      background: '#fff', padding: 6,
+                      boxShadow: '0 4px 16px rgba(0,0,0,0.5)',
+                    }}>
+                      <svg viewBox="0 0 21 21" width="100%" height="100%" style={{ display: 'block', shapeRendering: 'crispEdges' }}>
+                        {/* Finder patterns + data cells — hand-crafted QR-like art */}
+                        {[
+                          [0,0],[1,0],[2,0],[3,0],[4,0],[5,0],[6,0],
+                          [0,1],[6,1],
+                          [0,2],[2,2],[3,2],[4,2],[6,2],
+                          [0,3],[2,3],[4,3],[6,3],
+                          [0,4],[2,4],[3,4],[4,4],[6,4],
+                          [0,5],[6,5],
+                          [0,6],[1,6],[2,6],[3,6],[4,6],[5,6],[6,6],
+                          [14,0],[15,0],[16,0],[17,0],[18,0],[19,0],[20,0],
+                          [14,1],[20,1],
+                          [14,2],[16,2],[17,2],[18,2],[20,2],
+                          [14,3],[16,3],[18,3],[20,3],
+                          [14,4],[16,4],[17,4],[18,4],[20,4],
+                          [14,5],[20,5],
+                          [14,6],[15,6],[16,6],[17,6],[18,6],[19,6],[20,6],
+                          [0,14],[1,14],[2,14],[3,14],[4,14],[5,14],[6,14],
+                          [0,15],[6,15],
+                          [0,16],[2,16],[3,16],[4,16],[6,16],
+                          [0,17],[2,17],[4,17],[6,17],
+                          [0,18],[2,18],[3,18],[4,18],[6,18],
+                          [0,19],[6,19],
+                          [0,20],[1,20],[2,20],[3,20],[4,20],[5,20],[6,20],
+                          [8,0],[10,0],[12,0],
+                          [9,1],[11,1],
+                          [8,2],[10,2],[12,2],
+                          [8,4],[9,4],[11,4],
+                          [10,5],[12,5],
+                          [8,6],[9,6],[11,6],[12,6],
+                          [8,8],[10,8],[11,8],[13,8],[15,8],[17,8],[19,8],
+                          [9,9],[12,9],[14,9],[16,9],[18,9],[20,9],
+                          [8,10],[11,10],[13,10],[15,10],[17,10],[19,10],
+                          [9,11],[10,11],[12,11],[14,11],[16,11],[18,11],[20,11],
+                          [8,12],[10,12],[12,12],[14,12],[16,12],[19,12],
+                          [9,13],[11,13],[13,13],[15,13],[17,13],[20,13],
+                          [8,14],[10,14],[12,14],[14,14],[16,14],[18,14],
+                          [8,15],[9,15],[11,15],[13,15],[15,15],[17,15],[19,15],
+                          [8,16],[10,16],[12,16],[14,16],[16,16],[18,16],[20,16],
+                          [9,17],[11,17],[13,17],[15,17],[17,17],[19,17],
+                          [8,18],[10,18],[12,18],[14,18],[16,18],[18,18],[20,18],
+                          [9,19],[11,19],[13,19],[15,19],[17,19],[19,19],
+                          [8,20],[10,20],[12,20],[14,20],[16,20],[18,20],[20,20],
+                        ].map(([x,y],i) => (
+                          <rect key={i} x={x} y={y} width={1} height={1} fill="#111827" />
+                        ))}
+                      </svg>
+                    </div>
+                    <span style={{ fontSize: 10.5, fontWeight: 600, color: 'rgba(255,255,255,0.28)', textAlign: 'center', lineHeight: 1.5 }}>
+                      Scan in the builder<br />to stream live to your phone
+                    </span>
+                  </div>
+                </div>
               </div>
 
             </div>
