@@ -391,8 +391,11 @@ export default function SignupGate() {
 
           {/* Terms */}
           {mode === 'signup' && (
-            <p style={{ fontSize: 9.5, color: '#1e3a5f', textAlign: 'center', marginTop: 14, lineHeight: 1.55 }}>
-              By creating an account you agree to our Terms of Service and Privacy Policy.
+            <p style={{ fontSize: 9.5, color: '#334155', textAlign: 'center', marginTop: 14, lineHeight: 1.55 }}>
+              By creating an account you agree to our{' '}
+              <a href="/terms" target="_blank" style={{ color: '#6366f1', textDecoration: 'none' }}>Terms of Service</a>
+              {' '}and{' '}
+              <a href="/privacy" target="_blank" style={{ color: '#6366f1', textDecoration: 'none' }}>Privacy Policy</a>.
             </p>
           )}
         </div>

@@ -54,6 +54,8 @@ import { useFirstBoot }       from './hooks/useFirstBoot'
 import SignupGate      from './components/SignupGate'
 import PhonePreview    from './components/PhonePreview'
 import ProUpgradeGate  from './components/ProUpgradeGate'
+import TermsPage       from './components/TermsPage'
+import PrivacyPage     from './components/PrivacyPage'
 
 // Video Editor mode
 import VideoLeftSidebar       from './video/VideoLeftSidebar'
@@ -241,6 +243,10 @@ export default function App() {
 
   // ── Standalone download portal — bypasses the entire app shell ──────────────
   if (window.location.pathname === '/download') return <DownloadPortal />
+
+  // ── Legal pages — bypass app shell ───────────────────────────────────────────
+  if (window.location.pathname === '/terms')   return <TermsPage />
+  if (window.location.pathname === '/privacy') return <PrivacyPage />
 
   // ── First-boot setup wizard (desktop Electron only) ─────────────────────────
   if (checking) return null

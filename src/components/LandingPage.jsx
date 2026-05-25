@@ -1223,7 +1223,7 @@ export default function LandingPage() {
         <footer style={{ padding: '36px 32px', background: '#090A0F', borderTop: '1px solid rgba(255,255,255,0.05)' }}>
           <div className="lp-footer-inner" style={{ maxWidth: 1180, margin: '0 auto', display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap', gap: 20 }}>
             <img src="/zaraforge-logo.png" alt="ZaraForge" style={{ height: 26, width: 'auto', opacity: 0.35, cursor: 'pointer' }} onClick={() => scrollTo('lp-hero')} />
-            <div className="lp-footer-links" style={{ display: 'flex', gap: 28 }}>
+            <div className="lp-footer-links" style={{ display: 'flex', gap: 28, flexWrap: 'wrap', alignItems: 'center' }}>
               {[['Features', 'lp-suite'], ['Platform', 'lp-infra'], ['About', 'lp-about'], ['Pricing', 'lp-pricing']].map(([label, id]) => (
                 <button key={id} className="lp-flink" onClick={() => scrollTo(id)} style={{
                   fontSize: 13, fontWeight: 500, color: 'rgba(255,255,255,0.22)',
@@ -1231,6 +1231,15 @@ export default function LandingPage() {
                   transition: 'color 0.15s',
                 }}>{label}</button>
               ))}
+              <a href="/terms" style={{ fontSize: 13, fontWeight: 500, color: 'rgba(255,255,255,0.22)', textDecoration: 'none', transition: 'color 0.15s' }}
+                onMouseEnter={e => e.currentTarget.style.color = '#e2e8f0'}
+                onMouseLeave={e => e.currentTarget.style.color = 'rgba(255,255,255,0.22)'}>Terms</a>
+              <a href="/privacy" style={{ fontSize: 13, fontWeight: 500, color: 'rgba(255,255,255,0.22)', textDecoration: 'none', transition: 'color 0.15s' }}
+                onMouseEnter={e => e.currentTarget.style.color = '#e2e8f0'}
+                onMouseLeave={e => e.currentTarget.style.color = 'rgba(255,255,255,0.22)'}>Privacy</a>
+              <a href="mailto:hello@zaraforge.app" style={{ fontSize: 13, fontWeight: 500, color: 'rgba(255,255,255,0.22)', textDecoration: 'none', transition: 'color 0.15s' }}
+                onMouseEnter={e => e.currentTarget.style.color = '#e2e8f0'}
+                onMouseLeave={e => e.currentTarget.style.color = 'rgba(255,255,255,0.22)'}>Contact</a>
             </div>
             <p style={{ fontSize: 13, color: 'rgba(255,255,255,0.18)' }}>© 2026 ZaraForge. Built for limitless creators.</p>
           </div>
