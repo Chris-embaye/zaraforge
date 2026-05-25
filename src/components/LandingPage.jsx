@@ -864,7 +864,7 @@ export default function LandingPage() {
                     </li>
                   ))}
                 </ul>
-                <button className="lp-ppro" onClick={() => window.open('STRIPE_PAYMENT_LINK', '_blank')} style={{
+                <button className="lp-ppro" onClick={() => window.open('https://buy.stripe.com/28E6oI92PeRk1F66173ZK00', '_blank')} style={{
                   width: '100%', padding: 15, borderRadius: 13, fontSize: 14, fontWeight: 700,
                   cursor: 'pointer', fontFamily: 'inherit', border: 'none',
                   background: 'linear-gradient(135deg, #059669 0%, #10b981 100%)',
