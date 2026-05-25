@@ -83,8 +83,8 @@ function DevicePanel({ pos, onClose }) {
 
   useEffect(() => { clearUnread() }, [])
 
-  const sessionUrl    = `https://live.zaraforge.app/s/${sessionId}`
-  const sessionShort  = `live.zaraforge.app/s/${sessionId}`
+  const sessionUrl    = `https://zaraforge.com/?phoneSession=${sessionId}`
+  const sessionShort  = `zaraforge.com/?phoneSession=${sessionId}`
 
   const [tick, setTick] = useState(0)
   useEffect(() => {

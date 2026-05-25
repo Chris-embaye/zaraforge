@@ -51,7 +51,8 @@ import DownloadPortal         from './components/DownloadPortal'
 import FirstBootSetup         from './components/FirstBootSetup'
 import { useFirstBoot }       from './hooks/useFirstBoot'
 
-import SignupGate from './components/SignupGate'
+import SignupGate    from './components/SignupGate'
+import PhonePreview  from './components/PhonePreview'
 
 // Video Editor mode
 import VideoLeftSidebar       from './video/VideoLeftSidebar'
@@ -221,6 +222,10 @@ export default function App() {
   const isVideo   = appMode === 'video'
   const isAdmin   = appMode === 'admin'
   const isHadas   = appMode === 'hadas'
+
+  // ── Phone live mirror — bypasses the entire app shell ───────────────────────
+  const _phoneSession = new URLSearchParams(window.location.search).get('phoneSession')
+  if (_phoneSession) return <PhonePreview sessionId={_phoneSession} />
 
   // ── Standalone download portal — bypasses the entire app shell ──────────────
   if (window.location.pathname === '/download') return <DownloadPortal />

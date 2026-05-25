@@ -10,6 +10,7 @@
   },
   "dependencies": {
     "@imgly/background-removal": "^1.7.0",
+    "ably": "^2.21.0",
     "jszip": "^3.10.1",
     "lucide-react": "^0.453.0",
     "qrcode": "^1.5.4",

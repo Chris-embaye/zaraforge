@@ -1,4 +1,6 @@
 import { create } from 'zustand'
+import { compileProject } from '../lib/compiler'
+import { useBuilderStore } from './builderStore'
 
 function uid() { return Math.random().toString(36).slice(2, 9) }
 
@@ -23,7 +25,29 @@ const SIMULATED_EVENTS = [
   { type: 'tap',    message: 'Hero CTA pressed' },
 ]
 
-let simTimeout = null
+let simTimeout  = null
+let syncInterval = null
+let ablyClient  = null
+let ablyChannel = null
+
+function initAbly(sessionId) {
+  const key = import.meta.env.VITE_ABLY_KEY
+  if (!key || ablyClient) return
+  import('ably').then(({ Realtime }) => {
+    ablyClient  = new Realtime({ key, clientId: `builder-${uid()}` })
+    ablyChannel = ablyClient.channels.get(`zf-preview-${sessionId}`)
+  })
+}
+
+function publishCanvas(sessionId) {
+  if (!ablyChannel) return
+  try {
+    const { pages } = useBuilderStore.getState()
+    if (!pages?.length) return
+    const html = compileProject(pages)
+    ablyChannel.publish('canvas', { html }).catch(() => {})
+  } catch (_) {}
+}
 
 export const useDeviceStore = create((set, get) => ({
   showPanel:  false,
@@ -40,16 +64,21 @@ export const useDeviceStore = create((set, get) => ({
 
   connectDevice: () => {
     set({ connecting: true })
+    initAbly(get().sessionId)
     setTimeout(() => {
       const d = MOCK_DEVICES[Math.floor(Math.random() * MOCK_DEVICES.length)]
       set({ connected: true, connecting: false, deviceName: d.name, deviceOS: d.os, latencyMs: d.latency })
       get().pushEvent('connect', `Connected: ${d.name}`)
       get()._startSim()
+      get()._startSync()
     }, 2200)
   },
 
   disconnectDevice: () => {
-    if (simTimeout) { clearTimeout(simTimeout); simTimeout = null }
+    if (simTimeout)   { clearTimeout(simTimeout);    simTimeout   = null }
+    if (syncInterval) { clearInterval(syncInterval); syncInterval = null }
+    if (ablyChannel)  { ablyChannel = null }
+    if (ablyClient)   { ablyClient.close(); ablyClient = null }
     set({ connected: false, connecting: false, deviceName: '', deviceOS: '', latencyMs: 0 })
   },
 
@@ -64,6 +93,16 @@ export const useDeviceStore = create((set, get) => ({
   clearUnread: () => set({ unreadCount: 0 }),
 
   clearEvents: () => set({ events: [], unreadCount: 0 }),
+
+  _startSync: () => {
+    if (syncInterval) { clearInterval(syncInterval); syncInterval = null }
+    const sessionId = get().sessionId
+    publishCanvas(sessionId)
+    syncInterval = setInterval(() => {
+      if (!get().connected) return
+      publishCanvas(sessionId)
+    }, 4000)
+  },
 
   _startSim: () => {
     if (simTimeout) { clearTimeout(simTimeout); simTimeout = null }
