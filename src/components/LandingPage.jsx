@@ -309,13 +309,31 @@ const CSS = `
   .lp-suite-grid .lp-c-builder { grid-column: 1 / 3 !important; }
   .lp-infra-grid, .lp-about-grid { grid-template-columns: 1fr !important; }
   .lp-nav-center { display: none !important; }
+  .lp-hero-sec { padding: 90px 24px 110px !important; }
+  .lp-section { padding: 80px 24px !important; }
+  .lp-nav-inner { padding: 0 20px !important; }
 }
 @media (max-width: 600px) {
   .lp-suite-grid { grid-template-columns: 1fr !important; }
   .lp-suite-grid .lp-c-builder { grid-column: 1 !important; }
+  .lp-suite-grid .lp-c-studio { grid-column: 1 !important; grid-row: auto !important; }
   .lp-pricing-grid { grid-template-columns: 1fr !important; }
-  .lp-cta-card { padding: 44px 28px !important; }
+  .lp-cta-card { padding: 44px 16px !important; }
+  .lp-cta-inner { padding: 44px 24px !important; }
   .lp-hero-btns { flex-direction: column !important; align-items: stretch !important; }
+  .lp-hero-btns > * { width: 100% !important; justify-content: center !important; }
+  .lp-hero-btns button { width: 100% !important; justify-content: center !important; }
+  .lp-hero-sec { padding: 70px 16px 80px !important; }
+  .lp-section { padding: 60px 16px !important; }
+  .lp-nav-inner { padding: 0 16px !important; height: 56px !important; }
+  .lp-nav-sign-in { display: none !important; }
+  .lp-nav-start { padding: 7px 14px !important; font-size: 12.5px !important; }
+  .lp-builder-tags { display: none !important; }
+  .lp-social-proof { gap: 12px 20px !important; }
+  .lp-about-bio { padding: 28px !important; }
+  .lp-footer-inner { flex-direction: column !important; align-items: center !important; text-align: center !important; gap: 14px !important; }
+  .lp-footer-links { flex-wrap: wrap !important; justify-content: center !important; gap: 12px 20px !important; }
+  .lp-pricing-grid { gap: 12px !important; }
 }
 `
 
@@ -365,7 +383,7 @@ export default function LandingPage() {
           borderBottom: `1px solid ${navScrolled ? 'rgba(255,255,255,0.08)' : 'transparent'}`,
           transition: 'all 0.25s',
         }}>
-          <div style={{ maxWidth: 1180, margin: '0 auto', padding: '0 32px', height: 64, display: 'flex', alignItems: 'center', gap: 36 }}>
+          <div className="lp-nav-inner" style={{ maxWidth: 1180, margin: '0 auto', padding: '0 32px', height: 64, display: 'flex', alignItems: 'center', gap: 36 }}>
             <img src="/zaraforge-logo.png" alt="ZaraForge" style={{ height: 32, width: 'auto', objectFit: 'contain', cursor: 'pointer', filter: 'brightness(1.1)' }} onClick={() => scrollTo('lp-hero')} />
 
             <div className="lp-nav-center" style={{ display: 'flex', alignItems: 'center', gap: 2, flex: 1 }}>
@@ -379,13 +397,13 @@ export default function LandingPage() {
             </div>
 
             <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginLeft: 'auto' }}>
-              <button className="lp-nav-btn" onClick={() => launch('builder')} style={{
+              <button className="lp-nav-btn lp-nav-sign-in" onClick={() => launch('builder')} style={{
                 fontSize: 13.5, fontWeight: 600, color: 'rgba(255,255,255,0.45)',
                 background: 'none', border: '1px solid transparent', cursor: 'pointer',
                 padding: '8px 16px', borderRadius: 10, fontFamily: 'inherit',
               }}>{t('auth_sign_in')}</button>
               <div className="lp-grad-border">
-                <button className="lp-hero-inner" onClick={() => launch('builder')} style={{
+                <button className="lp-hero-inner lp-nav-start" onClick={() => launch('builder')} style={{
                   fontSize: 13.5, fontWeight: 700, color: '#e2e8f0',
                   background: '#0d0e16', border: 'none', cursor: 'pointer',
                   padding: '9px 20px', borderRadius: 12.5, fontFamily: 'inherit',
@@ -400,7 +418,7 @@ export default function LandingPage() {
         </nav>
 
         {/* ━━━━━━━━━━━━━━  HERO  ━━━━━━━━━━━━━━ */}
-        <section id="lp-hero" style={{ position: 'relative', padding: '136px 32px 160px', textAlign: 'center', overflow: 'hidden', background: '#090A0F' }}>
+        <section id="lp-hero" className="lp-hero-sec" style={{ position: 'relative', padding: '136px 32px 160px', textAlign: 'center', overflow: 'hidden', background: '#090A0F' }}>
 
           {/* Floating blobs */}
           <div style={{ position: 'absolute', inset: 0, pointerEvents: 'none', overflow: 'hidden' }}>
@@ -500,7 +518,7 @@ export default function LandingPage() {
             </div>
 
             {/* Social proof */}
-            <div style={{ marginTop: 64, display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 36, flexWrap: 'wrap' }}>
+            <div className="lp-social-proof" style={{ marginTop: 64, display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 36, flexWrap: 'wrap' }}>
               {[['⚡', 'No code required'], ['🔐', 'Auth included'], ['🌍', 'Deploy in seconds'], ['🎵', 'Studio + Builder + Logo']].map(([icon, text]) => (
                 <div key={text} style={{ display: 'flex', alignItems: 'center', gap: 8, fontSize: 12.5, fontWeight: 500, color: 'rgba(255,255,255,0.25)' }}>
                   <span style={{ fontSize: 15 }}>{icon}</span>{text}
@@ -511,7 +529,7 @@ export default function LandingPage() {
         </section>
 
         {/* ━━━━━━━━━━━━━━  01/02 SUITE DECK  ━━━━━━━━━━━━━━ */}
-        <section id="lp-suite" style={{ padding: '130px 32px', background: '#090A0F', borderTop: '1px solid rgba(255,255,255,0.04)' }}>
+        <section id="lp-suite" className="lp-section" style={{ padding: '130px 32px', background: '#090A0F', borderTop: '1px solid rgba(255,255,255,0.04)' }}>
           <div style={{ maxWidth: 1180, margin: '0 auto' }}>
 
             {/* Section tag */}
@@ -545,7 +563,7 @@ export default function LandingPage() {
                     <div style={{ fontSize: 15, fontWeight: 800, color: '#e2e8f0' }}>Builder — Conversational App Engine</div>
                     <div style={{ fontSize: 12, color: 'rgba(255,255,255,0.35)', marginTop: 2 }}>{landingCopy.builderSub}</div>
                   </div>
-                  <div style={{ marginLeft: 'auto', display: 'flex', gap: 6 }}>
+                  <div className="lp-builder-tags" style={{ marginLeft: 'auto', display: 'flex', gap: 6 }}>
                     {['AI Codegen', 'Live Deploy', 'Auto DB'].map(t => (
                       <span key={t} style={{ fontSize: 9.5, fontWeight: 700, padding: '3px 8px', borderRadius: 99, background: 'rgba(16,185,129,0.1)', color: '#34d399', border: '1px solid rgba(16,185,129,0.2)' }}>{t}</span>
                     ))}
@@ -646,7 +664,7 @@ export default function LandingPage() {
         </section>
 
         {/* ━━━━━━━━━━━━━━  02/02 BACKEND ENGINE  ━━━━━━━━━━━━━━ */}
-        <section id="lp-infra" style={{ padding: '130px 32px', background: '#090A0F', borderTop: '1px solid rgba(255,255,255,0.04)' }}>
+        <section id="lp-infra" className="lp-section" style={{ padding: '130px 32px', background: '#090A0F', borderTop: '1px solid rgba(255,255,255,0.04)' }}>
           <div style={{ maxWidth: 1180, margin: '0 auto' }}>
 
             <div className="lp-reveal" style={{ display: 'flex', alignItems: 'center', gap: 14, marginBottom: 20 }}>
@@ -747,7 +765,7 @@ export default function LandingPage() {
         </section>
 
         {/* ━━━━━━━━━━━━━━  ABOUT  ━━━━━━━━━━━━━━ */}
-        <section id="lp-about" style={{ padding: '130px 32px', background: '#090A0F', borderTop: '1px solid rgba(255,255,255,0.04)' }}>
+        <section id="lp-about" className="lp-section" style={{ padding: '130px 32px', background: '#090A0F', borderTop: '1px solid rgba(255,255,255,0.04)' }}>
           <div style={{ maxWidth: 1180, margin: '0 auto' }}>
 
             <div className="lp-reveal" style={{ marginBottom: 72, textAlign: 'center' }}>
@@ -760,7 +778,7 @@ export default function LandingPage() {
             <div className="lp-about-grid" style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 22, alignItems: 'stretch' }}>
 
               {/* Bio card */}
-              <div className="lp-glass lp-reveal" style={{ ...glass, padding: 44 }}>
+              <div className="lp-glass lp-reveal lp-about-bio" style={{ ...glass, padding: 44 }}>
                 <img src="/zaraforge-logo.png" alt="ZaraForge" style={{ height: 34, width: 'auto', objectFit: 'contain', marginBottom: 32, opacity: 0.8 }} />
                 <h3 style={{ fontSize: 21, fontWeight: 800, color: '#e2e8f0', letterSpacing: '-0.015em', marginBottom: 22, lineHeight: 1.3 }}>
                   A platform built from passion and purpose
@@ -805,7 +823,7 @@ export default function LandingPage() {
         </section>
 
         {/* ━━━━━━━━━━━━━━  PRICING  ━━━━━━━━━━━━━━ */}
-        <section id="lp-pricing" style={{ padding: '130px 32px', background: '#090A0F', borderTop: '1px solid rgba(255,255,255,0.04)' }}>
+        <section id="lp-pricing" className="lp-section" style={{ padding: '130px 32px', background: '#090A0F', borderTop: '1px solid rgba(255,255,255,0.04)' }}>
           <div style={{ maxWidth: 1180, margin: '0 auto' }}>
             <div className="lp-reveal" style={{ textAlign: 'center', marginBottom: 72 }}>
               <h2 style={{ fontSize: 'clamp(30px, 4.5vw, 54px)', fontWeight: 900, letterSpacing: '-0.028em', color: '#f1f5f9', marginBottom: 16 }}>
@@ -908,7 +926,7 @@ export default function LandingPage() {
             textAlign: 'center',
           }}>
             {/* White glass capsule */}
-            <div style={{
+            <div className="lp-cta-inner" style={{
               background: 'rgba(255,255,255,0.97)',
               borderRadius: 28,
               padding: '68px 64px',
@@ -942,9 +960,9 @@ export default function LandingPage() {
 
         {/* ━━━━━━━━━━━━━━  FOOTER  ━━━━━━━━━━━━━━ */}
         <footer style={{ padding: '36px 32px', background: '#090A0F', borderTop: '1px solid rgba(255,255,255,0.05)' }}>
-          <div style={{ maxWidth: 1180, margin: '0 auto', display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap', gap: 20 }}>
+          <div className="lp-footer-inner" style={{ maxWidth: 1180, margin: '0 auto', display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap', gap: 20 }}>
             <img src="/zaraforge-logo.png" alt="ZaraForge" style={{ height: 26, width: 'auto', opacity: 0.35, cursor: 'pointer' }} onClick={() => scrollTo('lp-hero')} />
-            <div style={{ display: 'flex', gap: 28 }}>
+            <div className="lp-footer-links" style={{ display: 'flex', gap: 28 }}>
               {[['Features', 'lp-suite'], ['Platform', 'lp-infra'], ['About', 'lp-about'], ['Pricing', 'lp-pricing']].map(([label, id]) => (
                 <button key={id} className="lp-flink" onClick={() => scrollTo(id)} style={{
                   fontSize: 13, fontWeight: 500, color: 'rgba(255,255,255,0.22)',
