@@ -51,8 +51,9 @@ import DownloadPortal         from './components/DownloadPortal'
 import FirstBootSetup         from './components/FirstBootSetup'
 import { useFirstBoot }       from './hooks/useFirstBoot'
 
-import SignupGate    from './components/SignupGate'
-import PhonePreview  from './components/PhonePreview'
+import SignupGate      from './components/SignupGate'
+import PhonePreview    from './components/PhonePreview'
+import ProUpgradeGate  from './components/ProUpgradeGate'
 
 // Video Editor mode
 import VideoLeftSidebar       from './video/VideoLeftSidebar'
@@ -167,7 +168,7 @@ function SessionRestoreOverlay({ user }) {
 
 
 export default function App() {
-  const { showExport, showPWA, showFormAnalytics, showVersionHistory, previewMode, appMode, setAppMode, appEntered, onboardingStep } = useBuilderStore()
+  const { showExport, showPWA, showFormAnalytics, showVersionHistory, previewMode, appMode, setAppMode, appEntered, onboardingStep, showProGate, resetProGate, activatePro } = useBuilderStore()
   const { showDeploy, showSecurityAudit } = useVibeStore()
   const { showExportPanel, showSequenceSettings, showAudioMixer } = useVideoStore()
   const { viewMode } = useCVStore()
@@ -214,6 +215,17 @@ export default function App() {
   useEffect(() => {
     if (user?.isAdmin && appMode !== 'admin') setAppMode('admin')
   }, [user?.isAdmin]) // eslint-disable-line react-hooks/exhaustive-deps
+
+  // Detect Stripe success redirect: ?plan=pro — activate Pro and clean URL
+  useEffect(() => {
+    const params = new URLSearchParams(window.location.search)
+    if (params.get('plan') === 'pro') {
+      activatePro()
+      params.delete('plan')
+      const clean = [window.location.pathname, params.toString()].filter(Boolean).join('?')
+      window.history.replaceState({}, '', clean)
+    }
+  }, []) // eslint-disable-line react-hooks/exhaustive-deps
 
   const isStudio  = appMode === 'studio'
   const isBuilder = appMode === 'builder'
@@ -337,6 +349,7 @@ export default function App() {
         <Toast />
         <MobileEventToast />
         <AssetTransferOverlay />
+        {showProGate && <ProUpgradeGate reason="gen_limit" />}
 
         {/* ── Auth & Session ──────────────────────────────────────────────── */}
         {showAuthModal     && <AuthModal />}

@@ -343,7 +343,11 @@ export default function LandingPage() {
   const { enterApp } = useBuilderStore()
   const { landingCopy, marketingPricing } = useMarketingStore()
   const { t } = useTranslation()
-  const [navScrolled, setNavScrolled] = useState(false)
+  const [navScrolled, setNavScrolled]   = useState(false)
+  const [emailGate, setEmailGate]       = useState(false)   // email capture modal open
+  const [capturedEmail, setCapturedEmail] = useState('')
+  const [emailError, setEmailError]     = useState('')
+  const [billing, setBilling]           = useState('monthly') // 'monthly' | 'annual'
   const containerRef = useRef(null)
 
   useReveal()
@@ -356,8 +360,26 @@ export default function LandingPage() {
     return () => el.removeEventListener('scroll', fn)
   }, [])
 
-  const launch  = (mode) => enterApp(mode)
-  const scrollTo = (id)  => document.getElementById(id)?.scrollIntoView({ behavior: 'smooth' })
+  const launch   = (mode) => enterApp(mode)
+  const scrollTo = (id)   => document.getElementById(id)?.scrollIntoView({ behavior: 'smooth' })
+
+  const handleCTA = (mode = 'builder') => setEmailGate(true)
+
+  const submitEmail = (e) => {
+    e.preventDefault()
+    if (!capturedEmail.trim() || !/\S+@\S+\.\S+/.test(capturedEmail)) {
+      setEmailError('Enter a valid email to continue.'); return
+    }
+    try { localStorage.setItem('zf-lead-email', capturedEmail.trim()) } catch {}
+    setEmailGate(false)
+    launch('builder')
+  }
+
+  const annualPrice   = 199
+  const monthlyPrice  = marketingPricing?.pro?.monthly ?? 29
+  const displayPrice  = billing === 'annual' ? annualPrice : monthlyPrice
+  const displayPeriod = billing === 'annual' ? '/yr' : '/mo'
+  const stripeLink    = 'https://buy.stripe.com/6oU3cwa6T5gK3NeeOD3ZK01'
 
   // Glass card base style
   const glass = {
@@ -404,7 +426,7 @@ export default function LandingPage() {
                 padding: '8px 16px', borderRadius: 10, fontFamily: 'inherit',
               }}>{t('auth_sign_in')}</button>
               <div className="lp-grad-border">
-                <button className="lp-hero-inner lp-nav-start" onClick={() => launch('builder')} style={{
+                <button className="lp-hero-inner lp-nav-start" onClick={() => handleCTA()} style={{
                   fontSize: 13.5, fontWeight: 700, color: '#e2e8f0',
                   background: '#0d0e16', border: 'none', cursor: 'pointer',
                   padding: '9px 20px', borderRadius: 12.5, fontFamily: 'inherit',
@@ -493,7 +515,7 @@ export default function LandingPage() {
                   pointerEvents: 'none', animation: 'lpFlagGlow 2.5s ease-in-out infinite',
                 }} />
                 <div className="lp-grad-border" style={{ position: 'relative' }}>
-                  <button className="lp-hero-inner" onClick={() => launch('builder')} style={{
+                  <button className="lp-hero-inner" onClick={() => handleCTA()} style={{
                     fontSize: 15.5, fontWeight: 800, color: '#f1f5f9',
                     background: '#0d0e18', border: 'none', cursor: 'pointer',
                     padding: '16px 34px', borderRadius: 12.5, fontFamily: 'inherit',
@@ -1066,7 +1088,7 @@ export default function LandingPage() {
                     </li>
                   ))}
                 </ul>
-                <button className="lp-pfree" onClick={() => launch('builder')} style={{
+                <button className="lp-pfree" onClick={() => handleCTA()} style={{
                   width: '100%', padding: 15, borderRadius: 13, fontSize: 14, fontWeight: 700,
                   cursor: 'pointer', fontFamily: 'inherit',
                   border: '1px solid rgba(255,255,255,0.12)',
@@ -1085,10 +1107,33 @@ export default function LandingPage() {
                 boxShadow: '0 0 0 1px rgba(16,185,129,0.1), 0 28px 70px rgba(0,0,0,0.4)',
               }}>
                 <div style={{ position: 'absolute', inset: 0, background: 'radial-gradient(ellipse 70% 50% at 50% 0%, rgba(16,185,129,0.1) 0%, transparent 100%)', pointerEvents: 'none' }} />
-                <div style={{ display: 'inline-flex', alignItems: 'center', gap: 6, padding: '4px 12px', borderRadius: 99, marginBottom: 20, fontSize: 10, fontWeight: 800, letterSpacing: '0.07em', textTransform: 'uppercase', background: 'rgba(16,185,129,0.1)', border: '1px solid rgba(16,185,129,0.25)', color: '#34d399', position: 'relative' }}>⚡ Most Popular</div>
+                <div style={{ display: 'inline-flex', alignItems: 'center', gap: 6, padding: '4px 12px', borderRadius: 99, marginBottom: 16, fontSize: 10, fontWeight: 800, letterSpacing: '0.07em', textTransform: 'uppercase', background: 'rgba(16,185,129,0.1)', border: '1px solid rgba(16,185,129,0.25)', color: '#34d399', position: 'relative' }}>⚡ Most Popular</div>
+
+                {/* Billing toggle */}
+                <div style={{ display: 'flex', gap: 0, background: 'rgba(255,255,255,0.04)', border: '1px solid rgba(255,255,255,0.07)', borderRadius: 9, padding: 3, width: 'fit-content', marginBottom: 20, position: 'relative' }}>
+                  {['monthly','annual'].map(b => (
+                    <button key={b} onClick={() => setBilling(b)} style={{
+                      padding: '6px 14px', borderRadius: 7, fontSize: 11, fontWeight: 700,
+                      cursor: 'pointer', border: 'none', fontFamily: 'inherit',
+                      background: billing === b ? 'rgba(16,185,129,0.15)' : 'transparent',
+                      color: billing === b ? '#34d399' : 'rgba(255,255,255,0.3)',
+                      transition: 'all 0.15s',
+                      display: 'flex', alignItems: 'center', gap: 5,
+                    }}>
+                      {b.charAt(0).toUpperCase() + b.slice(1)}
+                      {b === 'annual' && <span style={{ fontSize: 8.5, fontWeight: 800, padding: '1px 5px', borderRadius: 99, background: 'rgba(245,158,11,0.15)', color: '#f59e0b', border: '1px solid rgba(245,158,11,0.25)' }}>SAVE 43%</span>}
+                    </button>
+                  ))}
+                </div>
+
                 <p style={{ fontSize: 11, fontWeight: 800, letterSpacing: '0.1em', textTransform: 'uppercase', color: 'rgba(255,255,255,0.3)', marginBottom: 10, position: 'relative' }}>Pro</p>
-                <p style={{ fontSize: 46, fontWeight: 900, letterSpacing: '-0.035em', lineHeight: 1, color: '#f1f5f9', marginBottom: 6, position: 'relative' }}>${marketingPricing.pro.monthly}<span style={{ fontSize: 20, fontWeight: 500, color: 'rgba(255,255,255,0.3)' }}>/mo</span></p>
-                <p style={{ fontSize: 13, color: 'rgba(255,255,255,0.25)', marginBottom: 30, position: 'relative' }}>From ${marketingPricing.pro.monthly} / month · cancel anytime</p>
+                <p style={{ fontSize: 46, fontWeight: 900, letterSpacing: '-0.035em', lineHeight: 1, color: '#f1f5f9', marginBottom: 6, position: 'relative' }}>
+                  ${displayPrice}<span style={{ fontSize: 20, fontWeight: 500, color: 'rgba(255,255,255,0.3)' }}>{displayPeriod}</span>
+                  {billing === 'annual' && <span style={{ fontSize: 14, color: '#34d399', marginLeft: 10 }}>~${Math.round(annualPrice/12)}/mo</span>}
+                </p>
+                <p style={{ fontSize: 13, color: 'rgba(255,255,255,0.25)', marginBottom: 30, position: 'relative' }}>
+                  {billing === 'annual' ? 'Billed annually · cancel anytime' : '7-day free trial · then $29/mo · cancel anytime'}
+                </p>
                 <div style={{ height: 1, background: 'rgba(255,255,255,0.06)', marginBottom: 28, position: 'relative' }} />
                 <ul style={{ listStyle: 'none', display: 'flex', flexDirection: 'column', gap: 14, marginBottom: 36, position: 'relative' }}>
                   {PRO_F.map(f => (
@@ -1098,14 +1143,14 @@ export default function LandingPage() {
                     </li>
                   ))}
                 </ul>
-                <button className="lp-ppro" onClick={() => window.open('https://buy.stripe.com/6oU3cwa6T5gK3NeeOD3ZK01', '_blank')} style={{
+                <button className="lp-ppro" onClick={() => window.open(stripeLink, '_blank')} style={{
                   width: '100%', padding: 15, borderRadius: 13, fontSize: 14, fontWeight: 700,
                   cursor: 'pointer', fontFamily: 'inherit', border: 'none',
                   background: 'linear-gradient(135deg, #059669 0%, #10b981 100%)',
                   color: '#fff', position: 'relative',
                   transition: 'all 0.2s', boxShadow: '0 6px 24px rgba(16,185,129,0.35)',
                 }}>
-                  Get Pro access →
+                  {billing === 'annual' ? `Get Pro — $${annualPrice}/year →` : 'Start 7-day free trial →'}
                 </button>
               </div>
 
@@ -1160,7 +1205,7 @@ export default function LandingPage() {
               <p style={{ fontSize: 15, color: '#71717a', marginBottom: 44, lineHeight: 1.65 }}>
                 Join the creators who've stopped waiting<br />and started shipping.
               </p>
-              <button className="lp-cta-pill" onClick={() => launch('builder')} style={{
+              <button className="lp-cta-pill" onClick={() => handleCTA()} style={{
                 display: 'inline-flex', alignItems: 'center', gap: 10,
                 padding: '18px 40px', borderRadius: 14, fontSize: 15, fontWeight: 800,
                 cursor: 'pointer', fontFamily: 'inherit', border: 'none',
@@ -1192,6 +1237,69 @@ export default function LandingPage() {
         </footer>
 
       </div>
+
+      {/* ━━━━━━━━━━━━━━  EMAIL CAPTURE GATE  ━━━━━━━━━━━━━━ */}
+      {emailGate && (
+        <div style={{
+          position: 'fixed', inset: 0, zIndex: 200,
+          display: 'flex', alignItems: 'center', justifyContent: 'center',
+          background: 'rgba(2,2,14,0.88)', backdropFilter: 'blur(16px)',
+        }}>
+          <div style={{
+            width: '90%', maxWidth: 400,
+            background: '#07070f',
+            border: '1px solid rgba(99,102,241,0.22)',
+            borderRadius: 20, padding: '36px 32px',
+            boxShadow: '0 40px 120px rgba(0,0,0,0.8)',
+            position: 'relative',
+          }}>
+            <div style={{ position: 'absolute', top: 0, left: 0, right: 0, height: 160, borderRadius: '20px 20px 0 0', background: 'radial-gradient(ellipse 80% 70% at 50% 0%, rgba(99,102,241,0.14) 0%, transparent 100%)', pointerEvents: 'none' }} />
+
+            <button onClick={() => setEmailGate(false)} style={{ position: 'absolute', top: 14, right: 14, background: 'none', border: 'none', cursor: 'pointer', color: '#334155', fontSize: 18, lineHeight: 1, padding: 4 }}>✕</button>
+
+            <div style={{ width: 44, height: 44, borderRadius: 13, background: 'linear-gradient(135deg, #6366f1, #8b5cf6)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 18, fontWeight: 800, color: '#fff', marginBottom: 20, position: 'relative' }}>Z</div>
+
+            <h3 style={{ fontSize: 20, fontWeight: 900, color: '#f1f5f9', letterSpacing: '-0.025em', marginBottom: 8, position: 'relative' }}>
+              Where should we send your workspace?
+            </h3>
+            <p style={{ fontSize: 13, color: 'rgba(255,255,255,0.35)', lineHeight: 1.6, marginBottom: 24, position: 'relative' }}>
+              Enter your email to start building free — we'll save your progress and send you the link.
+            </p>
+
+            <form onSubmit={submitEmail} style={{ display: 'flex', flexDirection: 'column', gap: 12, position: 'relative' }}>
+              <input
+                type="email"
+                value={capturedEmail}
+                onChange={e => { setCapturedEmail(e.target.value); setEmailError('') }}
+                placeholder="you@example.com"
+                autoFocus
+                style={{
+                  width: '100%', padding: '12px 14px', borderRadius: 10, fontSize: 14,
+                  background: 'rgba(255,255,255,0.05)', border: `1px solid ${emailError ? 'rgba(248,113,113,0.5)' : 'rgba(255,255,255,0.1)'}`,
+                  color: '#e2e8f0', outline: 'none', fontFamily: 'inherit',
+                  boxSizing: 'border-box', transition: 'border-color 0.15s',
+                }}
+                onFocus={e => e.currentTarget.style.borderColor = 'rgba(99,102,241,0.6)'}
+                onBlur={e => e.currentTarget.style.borderColor = emailError ? 'rgba(248,113,113,0.5)' : 'rgba(255,255,255,0.1)'}
+              />
+              {emailError && <p style={{ fontSize: 11, color: '#f87171', marginTop: -6, display: 'flex', alignItems: 'center', gap: 5 }}><span>⚠</span> {emailError}</p>}
+              <button type="submit" style={{
+                width: '100%', padding: '13px 0', borderRadius: 11, fontSize: 14, fontWeight: 800,
+                cursor: 'pointer', fontFamily: 'inherit', border: 'none',
+                background: 'linear-gradient(135deg, #6366f1, #8b5cf6)',
+                color: '#fff', boxShadow: '0 4px 20px rgba(99,102,241,0.35)',
+                transition: 'all 0.2s',
+              }}>
+                Start building free →
+              </button>
+            </form>
+
+            <p style={{ textAlign: 'center', fontSize: 10, color: 'rgba(255,255,255,0.2)', marginTop: 14, lineHeight: 1.5 }}>
+              No spam. No credit card. Unsubscribe anytime.
+            </p>
+          </div>
+        </div>
+      )}
     </>
   )
 }

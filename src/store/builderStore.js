@@ -2,12 +2,21 @@ import { create } from 'zustand'
 import { v4 as uuidv4 } from 'uuid'
 import { DEFAULT_THEME } from '../context/ThemeContext'
 import { PALETTES } from '../lib/palettes'
+import { useAuthStore } from './authStore'
 
 const deepCopy = (x) => JSON.parse(JSON.stringify(x))
 
 // ─── LocalStorage keys ────────────────────────────────────────────────────────
-const WORKSPACE_KEY = 'zf-workspace'
-const VERSIONS_KEY  = 'zf-versions'
+const WORKSPACE_KEY  = 'zf-workspace'
+const VERSIONS_KEY   = 'zf-versions'
+const GEN_COUNT_KEY  = 'zf-gen-count'
+
+function loadGenCount() {
+  try { return parseInt(localStorage.getItem(GEN_COUNT_KEY) || '0', 10) } catch { return 0 }
+}
+function saveGenCount(n) {
+  try { localStorage.setItem(GEN_COUNT_KEY, String(n)) } catch {}
+}
 
 // ─── Section component defaults ───────────────────────────────────────────────
 const DEFAULTS = {
@@ -389,8 +398,35 @@ export const useBuilderStore = create((set, get) => ({
   genPhase:      'idle',           // 'idle' | 'running' | 'done'
   genTaskIdx:    -1,               // -1=idle, 0-4=active task, 5=all done
   onboardingStep: 'idle',          // 'idle' | 'running_tasks' | 'signup_gate' | 'delivered'
+  freeGenCount:  loadGenCount(),   // persisted across sessions
+  showProGate:   false,
+
+  openProGate:  () => set({ showProGate: true }),
+  resetProGate: () => set({ showProGate: false }),
+
+  // Upgrade: called when Stripe redirects back with ?plan=pro
+  activatePro: () => {
+    const { user, updateUser } = useAuthStore.getState()
+    if (user) updateUser({ plan: 'Pro' })
+    set({ showProGate: false })
+  },
 
   startGeneration: () => {
+    const { freeGenCount } = get()
+    const { user } = useAuthStore.getState()
+    const isPro = user?.plan === 'Pro'
+    const isLoggedIn = !!user
+
+    if (isLoggedIn && !isPro && freeGenCount >= 3) {
+      set({ showProGate: true })
+      return
+    }
+
+    // Increment and persist count
+    const newCount = freeGenCount + 1
+    saveGenCount(newCount)
+    set({ freeGenCount: newCount })
+
     set({ genPhase: 'running', genTaskIdx: 0, onboardingStep: 'running_tasks' })
     const DURATIONS = [800, 1100, 1000, 900, 1000]
     let idx = 0

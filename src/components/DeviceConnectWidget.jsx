@@ -1,6 +1,8 @@
 import { useRef, useState, useEffect, useMemo } from 'react'
 import { Smartphone, Wifi, WifiOff, X, Loader2, Zap, Activity, Trash2 } from 'lucide-react'
 import { useDeviceStore } from '../store/deviceStore'
+import { useAuthStore }   from '../store/authStore'
+import ProUpgradeGate     from './ProUpgradeGate'
 import QRCodeLib from 'qrcode'
 
 // ── Real QR code renderer ─────────────────────────────────────────────────────
@@ -241,10 +243,14 @@ function DevicePanel({ pos, onClose }) {
 // ── Button (rendered in TopBar) ────────────────────────────────────────────────
 export default function DeviceConnectWidget() {
   const { showPanel, setShowPanel, connected, connecting, unreadCount } = useDeviceStore()
+  const { user } = useAuthStore()
+  const isPro = user?.plan === 'Pro'
   const btnRef = useRef(null)
   const [panelPos, setPanelPos] = useState({ top: 56, right: 16 })
+  const [showProGate, setShowProGate] = useState(false)
 
   const handleToggle = () => {
+    if (!isPro) { setShowProGate(true); return }
     if (btnRef.current) {
       const rect = btnRef.current.getBoundingClientRect()
       setPanelPos({ top: rect.bottom + 8, right: window.innerWidth - rect.right })
@@ -270,6 +276,9 @@ export default function DeviceConnectWidget() {
         <span className="hidden sm:block">
           {connecting ? 'Connecting...' : connected ? 'Device Live' : 'Connect Phone'}
         </span>
+        {!isPro && (
+          <span style={{ fontSize: 9, fontWeight: 800, padding: '1px 5px', borderRadius: 4, background: 'rgba(245,158,11,0.15)', color: '#f59e0b', border: '1px solid rgba(245,158,11,0.25)', letterSpacing: '0.04em' }}>PRO</span>
+        )}
         {connected && (
           <span style={{
             width: 7, height: 7, borderRadius: '50%', background: '#34d399',
@@ -288,8 +297,12 @@ export default function DeviceConnectWidget() {
         )}
       </button>
 
-      {showPanel && (
+      {showPanel && isPro && (
         <DevicePanel pos={panelPos} onClose={() => setShowPanel(false)} />
+      )}
+
+      {showProGate && (
+        <ProUpgradeGate reason="phone_mirror" onClose={() => setShowProGate(false)} />
       )}
 
       <style>{`@keyframes pulse { 0%,100%{opacity:1}50%{opacity:0.4} }`}</style>
