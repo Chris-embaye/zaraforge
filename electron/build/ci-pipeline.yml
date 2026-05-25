@@ -1,0 +1,171 @@
+# ── ZaraForge Desktop — GitHub Actions CI/CD Pipeline ───────────────────────
+# Triggered on git tag push (v*.*.*) — builds, signs, notarizes, and releases.
+#
+# Required GitHub Secrets:
+#   APPLE_ID                      Apple Developer account email
+#   APPLE_APP_SPECIFIC_PASSWORD   App-specific password from appleid.apple.com
+#   APPLE_TEAM_ID                 10-char team ID from developer.apple.com
+#   APPLE_SIGNING_IDENTITY        "Developer ID Application: ..."
+#   APPLE_CERTIFICATE_BASE64      Base64 of .p12 certificate
+#   APPLE_CERTIFICATE_PASSWORD    Certificate export password
+#   WIN_CERT_BASE64               Base64 of Windows .pfx certificate
+#   WIN_CERT_PASSWORD             PFX export password
+#   HEARTBEAT_HMAC_SECRET         Shared HMAC secret (main.js ↔ server)
+#   HEARTBEAT_JWT_SECRET          JWT signing secret (server → client)
+
+name: Desktop Release
+
+on:
+  push:
+    tags:
+      - 'v*.*.*'
+
+jobs:
+  # ── macOS: Build, Sign, Notarize ───────────────────────────────────────────
+  build-mac:
+    name: macOS (signed + notarized)
+    runs-on: macos-14      # Apple Silicon runner for universal builds
+    timeout-minutes: 60
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+
+      - name: Install web dependencies
+        run: npm ci
+
+      - name: Build web app (Vite)
+        run: npm run build
+
+      - name: Install Electron dependencies
+        working-directory: electron
+        run: npm ci
+
+      - name: Import Apple signing certificate
+        env:
+          APPLE_CERTIFICATE_BASE64: ${{ secrets.APPLE_CERTIFICATE_BASE64 }}
+          APPLE_CERTIFICATE_PASSWORD: ${{ secrets.APPLE_CERTIFICATE_PASSWORD }}
+        run: |
+          CERT_PATH="$RUNNER_TEMP/certificate.p12"
+          KEYCHAIN_PATH="$RUNNER_TEMP/zaraforge.keychain-db"
+          KEYCHAIN_PASSWORD=$(openssl rand -hex 16)
+
+          echo "$APPLE_CERTIFICATE_BASE64" | base64 --decode > "$CERT_PATH"
+
+          security create-keychain -p "$KEYCHAIN_PASSWORD" "$KEYCHAIN_PATH"
+          security set-keychain-settings -lut 21600 "$KEYCHAIN_PATH"
+          security unlock-keychain -p "$KEYCHAIN_PASSWORD" "$KEYCHAIN_PATH"
+          security import "$CERT_PATH" -P "$APPLE_CERTIFICATE_PASSWORD" \
+            -A -t cert -f pkcs12 -k "$KEYCHAIN_PATH"
+          security list-keychain -d user -s "$KEYCHAIN_PATH"
+          security find-identity -v -p codesigning "$KEYCHAIN_PATH"
+
+      - name: Compile V8 bytecode
+        working-directory: electron
+        run: node build/bytecode-plugin.js
+
+      - name: Build & notarize macOS DMG
+        working-directory: electron
+        env:
+          APPLE_ID:                     ${{ secrets.APPLE_ID }}
+          APPLE_APP_SPECIFIC_PASSWORD:  ${{ secrets.APPLE_APP_SPECIFIC_PASSWORD }}
+          APPLE_TEAM_ID:                ${{ secrets.APPLE_TEAM_ID }}
+          APPLE_SIGNING_IDENTITY:       ${{ secrets.APPLE_SIGNING_IDENTITY }}
+          HEARTBEAT_HMAC_SECRET:        ${{ secrets.HEARTBEAT_HMAC_SECRET }}
+          HEARTBEAT_JWT_SECRET:         ${{ secrets.HEARTBEAT_JWT_SECRET }}
+        run: npm run dist:mac
+
+      - name: Upload macOS artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: macos-dmg
+          path: release/*.dmg
+
+  # ── Windows: Build + Sign ──────────────────────────────────────────────────
+  build-win:
+    name: Windows (EV signed)
+    runs-on: windows-latest
+    timeout-minutes: 45
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+
+      - name: Install web dependencies
+        run: npm ci
+
+      - name: Build web app (Vite)
+        run: npm run build
+
+      - name: Install Electron dependencies
+        working-directory: electron
+        run: npm ci
+
+      - name: Import Windows EV certificate
+        env:
+          WIN_CERT_BASE64:    ${{ secrets.WIN_CERT_BASE64 }}
+          WIN_CERT_PASSWORD:  ${{ secrets.WIN_CERT_PASSWORD }}
+        run: |
+          $certPath = "$env:RUNNER_TEMP\certificate.pfx"
+          [System.IO.File]::WriteAllBytes($certPath, [System.Convert]::FromBase64String($env:WIN_CERT_BASE64))
+          echo "WIN_CERT_PATH=$certPath" >> $env:GITHUB_ENV
+
+      - name: Compile V8 bytecode
+        working-directory: electron
+        run: node build/bytecode-plugin.js
+
+      - name: Build & sign Windows NSIS installer
+        working-directory: electron
+        env:
+          WIN_CERT_PATH:          ${{ env.WIN_CERT_PATH }}
+          WIN_CERT_PASSWORD:      ${{ secrets.WIN_CERT_PASSWORD }}
+          HEARTBEAT_HMAC_SECRET:  ${{ secrets.HEARTBEAT_HMAC_SECRET }}
+          HEARTBEAT_JWT_SECRET:   ${{ secrets.HEARTBEAT_JWT_SECRET }}
+        run: npm run dist:win
+
+      - name: Upload Windows artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: windows-installer
+          path: release/*.exe
+
+  # ── GitHub Release ─────────────────────────────────────────────────────────
+  release:
+    name: Create GitHub Release
+    needs: [build-mac, build-win]
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Download macOS artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: macos-dmg
+          path: release/
+
+      - name: Download Windows artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: windows-installer
+          path: release/
+
+      - name: Create Release
+        uses: softprops/action-gh-release@v2
+        with:
+          files: |
+            release/*.dmg
+            release/*.exe
+          generate_release_notes: true
+          draft: false
+          prerelease: ${{ contains(github.ref, '-beta') || contains(github.ref, '-rc') }}

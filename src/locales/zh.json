@@ -1,0 +1,10 @@
+{
+  "nav_studio":"录音室","nav_builder":"构建器","nav_logo":"Logo 制作","nav_bgremover":"去除背景","nav_video":"视频编辑器","nav_invite":"邀请团队","nav_history":"历史记录","nav_export_wav":"导出 WAV","nav_security":"安全","nav_publish":"发布应用","nav_ai_view":"AI 视图","nav_code_view":"代码视图","nav_live":"直播",
+  "chat_placeholder":"告诉我你想构建什么…","chat_send":"发送","chat_tab_chat":"对话","chat_tab_components":"组件","chat_tab_blueprint":"蓝图","chat_tab_infra":"基础设施","chat_new":"新建","chat_history":"历史","chat_thinking":"思考中…","chat_empty":"让我帮你构建一些东西。从『帮我构建一个…』开始。",
+  "blueprint_title":"应用程序组装蓝图","blueprint_idle_desc":"在对话中提交提示，实时查看您的全栈基础设施逐步组装。","blueprint_task_1":"分析布局请求并编译 UI 组件设计系统","blueprint_task_2":"构建安全的用户身份验证表","blueprint_task_3":"生成持久化 PostgreSQL 云数据库模式层","blueprint_task_4":"连接自动化后端微服务函数和服务器路由","blueprint_task_5":"优化代码执行循环并部署到安全的 CDN 端点","blueprint_running":"组装中 — 已完成 {pct}%","blueprint_paused":"已暂停 — 完成注册后继续","blueprint_done_status":"✓ 所有生产系统已上线","blueprint_done_title":"应用程序已成功部署！","blueprint_done_sub":"您的应用已上线，正在所有断点上渲染。","blueprint_new_project":"开始新项目","blueprint_milestone":"里程碑 {n} / {total}","blueprint_all_done":"{total} / {total} 个里程碑已完成",
+  "landing_hero_title":"认为自己无所不能。","landing_hero_sub":"唯一能将一句话转化为生产就绪应用的 AI 平台。","landing_cta_primary":"免费开始","landing_cta_secondary":"观看演示",
+  "auth_sign_in":"登录","auth_sign_up":"注册","auth_sign_out":"退出","auth_profile":"个人资料","auth_free_plan":"免费计划","auth_pro_plan":"专业计划","auth_upgrade":"升级到专业版","auth_credits":"剩余 {n} 积分",
+  "common_save":"保存","common_cancel":"取消","common_delete":"删除","common_edit":"编辑","common_copy":"复制","common_copied":"已复制！","common_close":"关闭","common_loading":"加载中…","common_search":"搜索…","common_new":"新建","common_or":"或",
+  "i18n_label":"语言","i18n_search":"搜索语言…","i18n_anchored":"首选","i18n_all":"所有语言",
+  "canvas_empty_title":"画布为空","canvas_empty_sub":"与 AI 对话以生成您的第一个页面。","sidebar_inspector":"检查器","sidebar_no_selection":"选择一个元素进行检查"
+}

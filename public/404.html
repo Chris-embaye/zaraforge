@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>ZaraForge</title>
+  <script>
+    // GitHub Pages SPA redirect — preserve the path for the React app
+    var l = window.location;
+    l.replace(
+      l.protocol + '//' + l.hostname + (l.port ? ':' + l.port : '') + '/' +
+      '?p=' + encodeURIComponent(l.pathname.slice(1)) +
+      (l.search ? '&q=' + encodeURIComponent(l.search.slice(1)) : '') +
+      l.hash
+    );
+  </script>
+</head>
+<body></body>
+</html>

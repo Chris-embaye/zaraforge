@@ -1,0 +1,38 @@
+{
+  "name": "zaraforge-desktop",
+  "version": "1.0.0",
+  "description": "ZaraForge — AI Creative Suite Desktop",
+  "main": "main.js",
+  "author": {
+    "name": "Chris Embaye",
+    "email": "embayechris@gmail.com"
+  },
+  "license": "UNLICENSED",
+  "private": true,
+  "scripts": {
+    "start": "electron .",
+    "build:web": "cd .. && npm run build",
+    "compile:bytecode": "node build/bytecode-plugin.js",
+    "dist:mac": "electron-builder --mac --config electron-builder.yml",
+    "dist:win": "electron-builder --win --config electron-builder.yml",
+    "dist:all": "electron-builder --mac --win --config electron-builder.yml",
+    "forge:make": "electron-forge make",
+    "forge:package": "electron-forge package"
+  },
+  "dependencies": {
+    "bytenode": "^1.5.5",
+    "electron-is-dev": "^3.0.0",
+    "electron-store": "^11.0.2",
+    "jsonwebtoken": "^9.0.2"
+  },
+  "devDependencies": {
+    "@electron-forge/cli": "^7.4.0",
+    "@electron-forge/maker-dmg": "^7.4.0",
+    "@electron-forge/maker-squirrel": "^7.4.0",
+    "@electron-forge/maker-zip": "^7.4.0",
+    "@electron/fuses": "^1.8.0",
+    "electron": "^31.0.0",
+    "electron-builder": "^25.0.0",
+    "electron-notarize": "^1.2.2"
+  }
+}

@@ -1,0 +1,166 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* ── Liquid Glass Design Token System ──────────────────────────────────────── */
+:root {
+  /* Glass surfaces */
+  --glass-bg:            rgba(255,255,255,0.04);
+  --glass-bg-hover:      rgba(255,255,255,0.07);
+  --glass-bg-active:     rgba(255,255,255,0.10);
+  --glass-bg-panel:      rgba(8,8,22,0.72);
+  --glass-bg-deep:       rgba(4,4,14,0.82);
+
+  /* Glass borders */
+  --glass-border:        rgba(255,255,255,0.07);
+  --glass-border-bright: rgba(255,255,255,0.14);
+  --glass-border-violet: rgba(167,139,250,0.18);
+
+  /* Blur */
+  --glass-blur:          blur(24px) saturate(180%);
+  --glass-blur-light:    blur(12px) saturate(160%);
+
+  /* Shadows */
+  --glass-shadow:        0 8px 32px rgba(0,0,0,0.5), 0 1px 0 rgba(255,255,255,0.05) inset;
+  --glass-shadow-lg:     0 20px 60px rgba(0,0,0,0.65), 0 1px 0 rgba(255,255,255,0.06) inset;
+
+  /* Accent glows */
+  --glow-violet:         0 0 32px rgba(109,40,217,0.25);
+  --glow-cyan:           0 0 32px rgba(0,229,255,0.2);
+
+  /* Space background layers */
+  --space-nebula-violet: rgba(109,40,217,0.15);
+  --space-nebula-cyan:   rgba(0,229,255,0.06);
+}
+
+/* ── Glass utility classes ──────────────────────────────────────────────────── */
+.glass {
+  background:              var(--glass-bg);
+  backdrop-filter:         var(--glass-blur);
+  -webkit-backdrop-filter: var(--glass-blur);
+  border:                  1px solid var(--glass-border);
+}
+
+.glass-panel {
+  background:              var(--glass-bg-panel);
+  backdrop-filter:         var(--glass-blur);
+  -webkit-backdrop-filter: var(--glass-blur);
+  border:                  1px solid var(--glass-border);
+  box-shadow:              var(--glass-shadow);
+}
+
+.glass-deep {
+  background:              var(--glass-bg-deep);
+  backdrop-filter:         var(--glass-blur);
+  -webkit-backdrop-filter: var(--glass-blur);
+  border:                  1px solid var(--glass-border);
+  box-shadow:              var(--glass-shadow-lg);
+}
+
+/* Floating panel entrance animation */
+@keyframes glass-float-in {
+  from { opacity: 0; transform: translateY(-6px) scale(0.98); filter: blur(4px); }
+  to   { opacity: 1; transform: translateY(0)    scale(1);    filter: blur(0);   }
+}
+.glass-float-in {
+  animation: glass-float-in 0.22s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+/* Subtle shimmer sweep */
+@keyframes glass-shimmer {
+  0%   { background-position: -200% center; }
+  100% { background-position:  200% center; }
+}
+
+/* Noise grain overlay for depth */
+.glass-grain::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  pointer-events: none;
+  opacity: 0.025;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='1'/%3E%3C/svg%3E");
+  background-size: 128px 128px;
+  mix-blend-mode: overlay;
+}
+
+/* ── Publish button glow pulse ──────────────────────────────────────────────── */
+@keyframes publish-pulse {
+  0%, 100% { box-shadow: 0 0 14px rgba(0,229,255,0.45), 0 0 28px rgba(0,229,255,0.18); }
+  50%       { box-shadow: 0 0 20px rgba(0,255,136,0.55), 0 0 40px rgba(0,229,255,0.25); }
+}
+.publish-glow:not(:disabled) { animation: publish-pulse 2.4s ease-in-out infinite; }
+.publish-glow:not(:disabled):hover { animation: none; filter: brightness(1.12); }
+
+/* ── Global resets ──────────────────────────────────────────────────────────── */
+* { box-sizing: border-box; }
+
+::-webkit-scrollbar { width: 6px; height: 6px; }
+::-webkit-scrollbar-track { background: #111118; }
+::-webkit-scrollbar-thumb { background: #2a2a3e; border-radius: 3px; }
+::-webkit-scrollbar-thumb:hover { background: #3a3a5e; }
+
+input[type="color"] {
+  -webkit-appearance: none;
+  border: none;
+  width: 32px;
+  height: 32px;
+  border-radius: 6px;
+  cursor: pointer;
+  padding: 0;
+}
+input[type="color"]::-webkit-color-swatch-wrapper { padding: 0; }
+input[type="color"]::-webkit-color-swatch { border: none; border-radius: 6px; }
+
+/* ── Feature 4: Canvas sandbox scoping ─────────────────────────────────────────
+ *
+ * [data-canvas-scope] is applied to the edit-mode canvas wrapper in Canvas.jsx.
+ *
+ * Goals:
+ *  1. Apply the user's chosen theme font-family to all canvas content.
+ *  2. Create an isolated stacking context so the canvas's z-index hierarchy
+ *     never interferes with the builder shell (TopBar, sidebars, modals).
+ *  3. Ensure consistent box-sizing inside the canvas even if a user's section
+ *     component adds its own reset.
+ *
+ * We deliberately do NOT use `all: initial` or a full CSS reset here, because
+ * canvas components already use inline styles for colors/backgrounds and rely
+ * on Tailwind utility classes for layout (flex, grid, padding). A full reset
+ * would break those layout classes.
+ *
+ * For true isolation (preview mode), Canvas.jsx renders an <iframe srcdoc>
+ * which has its own document, its own Tailwind CDN, and zero shared CSS.
+ * ────────────────────────────────────────────────────────────────────────────── */
+[data-canvas-scope] {
+  isolation: isolate;        /* own stacking context */
+  contain: layout style;     /* prevent layout/style bleed to builder shell */
+  font-family: var(--theme-font, inherit);
+}
+
+[data-canvas-scope] * {
+  box-sizing: border-box;
+}
+
+/* ── Toast animation ─────────────────────────────────────────────────────────── */
+@keyframes toast-in {
+  from { opacity: 0; transform: translateX(110%) scale(0.95); }
+  to   { opacity: 1; transform: translateX(0)   scale(1);    }
+}
+
+.animate-toast-in {
+  animation: toast-in 0.28s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+}
+
+/* ── Magic Re-Style wand spin ────────────────────────────────────────────────── */
+@keyframes wand-spin {
+  0%   { transform: rotate(0deg)   scale(1);    }
+  30%  { transform: rotate(-20deg) scale(1.25); }
+  60%  { transform: rotate(40deg)  scale(1.1);  }
+  80%  { transform: rotate(-10deg) scale(1.05); }
+  100% { transform: rotate(0deg)   scale(1);    }
+}
+
+.animate-wand-spin {
+  animation: wand-spin 0.65s cubic-bezier(0.34, 1.56, 0.64, 1);
+}

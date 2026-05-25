@@ -1,0 +1,148 @@
+# ── ZaraForge Desktop — electron-builder Configuration ───────────────────────
+# Run from electron/ directory:
+#   npm run dist:mac   → macOS DMG + ZIP
+#   npm run dist:win   → Windows NSIS installer
+#   npm run dist:all   → Both platforms (requires macOS for notarization)
+
+appId:          app.zaraforge.desktop
+productName:    ZaraForge
+copyright:      "© 2026 ZaraForge. All rights reserved."
+buildVersion:   "1.0.0"
+
+# ── Entry point: bootstrap.js loads V8 bytecode (main.jsc) ───────────────────
+# Switch to bootstrap.js after running: npm run compile:bytecode
+# For development without bytecode: keep as main.js
+main: bootstrap.js
+
+directories:
+  output:    ../release
+  buildResources: build
+
+# ── Files included in the package ────────────────────────────────────────────
+files:
+  - bootstrap.js
+  - main.jsc            # V8 bytecode (compiled from main.js)
+  - preload.jsc         # V8 bytecode (compiled from preload.js)
+  - node_modules/**
+  - "!node_modules/.cache/**"
+  - "!**/*.map"         # Strip source maps
+  - "!**/*.ts"          # Strip TypeScript sources
+
+extraResources:
+  - from: ../dist
+    to:   app
+    filter:
+      - "**/*"
+      - "!**/*.map"     # No source maps in production
+  - from: ../dist/integrity-manifest.json
+    to:   integrity-manifest.json
+
+# ── ASAR: seal the app archive ───────────────────────────────────────────────
+asar: true
+asarUnpack:
+  - "**/node_modules/bytenode/**"   # bytenode requires native .node files unpacked
+
+# ── macOS ─────────────────────────────────────────────────────────────────────
+mac:
+  category:   public.app-category.productivity
+  icon:       build/icon.icns
+  target:
+    - target: dmg
+      arch:   [x64, arm64]
+    - target: zip
+      arch:   [x64, arm64]
+
+  # Hardened Runtime — required for notarization
+  hardenedRuntime:  true
+  gatekeeperAssess: false
+  entitlements:     build/entitlements.mac.plist
+  entitlementsInherit: build/entitlements.mac.plist
+
+  # Identity: set APPLE_SIGNING_IDENTITY env var in CI
+  identity: ${APPLE_SIGNING_IDENTITY}
+
+dmg:
+  sign:     false          # DMG itself is not signed — binary inside is
+  title:    ZaraForge
+  icon:     build/icon.icns
+  contents:
+    - x: 410
+      y: 150
+      type: link
+      path: /Applications
+    - x: 130
+      y: 150
+      type: file
+
+# ── macOS Notarization ────────────────────────────────────────────────────────
+afterSign: build/notarize.js
+
+# ── Windows ───────────────────────────────────────────────────────────────────
+win:
+  icon:           build/icon.ico
+  target:
+    - target: nsis
+      arch:   [x64, ia32]
+  # EV Code Signing via Azure Trusted Signing or DigiCert EV cert
+  # Set WIN_CERT_PATH + WIN_CERT_PASSWORD env vars in CI / GitHub Actions
+  certificateFile:     ${WIN_CERT_PATH}
+  certificatePassword: ${WIN_CERT_PASSWORD}
+  signingHashAlgorithms: [sha256]
+  rfc3161TimeStampServer: http://timestamp.digicert.com
+
+nsis:
+  # ── Wizard mode (not one-click) ──────────────────────────────────────────
+  oneClick:     false          # Full setup wizard with user-visible steps
+  perMachine:   true           # Install for ALL users; requires elevation
+  allowElevation: true         # Request UAC prompt automatically
+
+  # ── Directory control ────────────────────────────────────────────────────
+  allowToChangeInstallationDirectory: true   # User can pick install path
+
+  # ── Multi-language: user chooses language before wizard begins ───────────
+  multiLanguageInstaller: true
+  installerLanguages:
+    - English               # en  (default — shown first)
+    - Tigrinya              # ti  — Eritrean language prioritised
+    - Amharic               # am
+    - Arabic                # ar
+    - French                # fr
+    - German                # de
+    - Spanish               # es
+    - Portuguese            # pt
+    - SimpChinese           # zh-Hans
+    - Japanese              # ja
+    - Korean                # ko
+    - Russian               # ru
+    - Italian               # it
+    - Dutch                 # nl
+
+  # ── Premium custom branding ──────────────────────────────────────────────
+  # All assets must be in electron/build/
+  # installerIcon:   256×256 ICO — shown in taskbar and UAC dialog
+  # installerSidebar:164×314 BMP (8-bit) — left panel of welcome/finish pages
+  # installerHeader: 150×57  BMP (8-bit) — top banner on inner wizard pages
+  # uninstallerIcon: can share the main icon
+  installerIcon:    build/icon.ico
+  uninstallerIcon:  build/icon.ico
+  installerSidebar: build/installer-sidebar.bmp    # ZaraForge dark-mode sidebar art
+  installerHeader:  build/installer-header.bmp     # ZaraForge wordmark header
+
+  # ── Legal + shortcuts ────────────────────────────────────────────────────
+  license:          build/LICENSE.rtf
+  createDesktopShortcut:    true
+  createStartMenuShortcut:  true
+  shortcutName:     ZaraForge
+  menuCategory:     ZaraForge
+
+  # ── Uninstall ────────────────────────────────────────────────────────────
+  deleteAppDataOnUninstall: false   # Preserve user projects on uninstall
+
+  # ── Custom NSIS script hooks (advanced branding) ─────────────────────────
+  # Place custom .nsh files in electron/build/nsis-scripts/
+  # include:  build/nsis-scripts/custom-pages.nsh
+
+# ── Auto-updater ─────────────────────────────────────────────────────────────
+publish:
+  provider: generic
+  url:      https://releases.zaraforge.app

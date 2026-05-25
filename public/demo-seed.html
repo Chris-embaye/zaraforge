@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8" />
+  <title>Loading Demo…</title>
+  <style>
+    body { margin: 0; background: #02020a; display: flex; align-items: center; justify-content: center;
+           height: 100vh; font-family: system-ui; color: #e2e8f0; flex-direction: column; gap: 16px; }
+    .spinner { width: 36px; height: 36px; border: 3px solid #1e293b; border-top-color: #6366f1;
+               border-radius: 50%; animation: spin 0.8s linear infinite; }
+    @keyframes spin { to { transform: rotate(360deg); } }
+    p { font-size: 13px; color: #64748b; }
+  </style>
+</head>
+<body>
+  <div class="spinner"></div>
+  <p>Seeding demo app…</p>
+  <script>
+    const uid = () => Math.random().toString(36).slice(2, 9) + Math.random().toString(36).slice(2, 9)
+
+    const theme = {
+      primaryColor:   '#6366f1',
+      secondaryColor: '#8b5cf6',
+      headingColor:   '#0f172a',
+      bodyColor:      '#64748b',
+      pageBg:         '#ffffff',
+      darkBg:         '#0f172a',
+      fontFamily:     '"Inter", system-ui, sans-serif',
+      borderRadius:   '0.75rem',
+    }
+
+    const components = [
+      {
+        id: uid(), type: 'Navbar',
+        props: {
+          brand: 'Nexus', bgColor: '#0f172a', textColor: '#ffffff', accentColor: '#6366f1',
+          links: ['Features', 'Pricing', 'Docs', 'Blog', 'About'],
+          showCTA: true, ctaText: 'Start Free Trial', ctaUrl: '#',
+        },
+      },
+      {
+        id: uid(), type: 'Hero',
+        props: {
+          headline: 'Build Smarter with Nexus',
+          subheadline: 'The all-in-one platform that helps modern teams ship faster, collaborate better, and scale without limits.',
+          primaryCTA: 'Start Free Trial', primaryCTAUrl: '#',
+          secondaryCTA: 'Watch Demo', secondaryCTAUrl: '#',
+          badge: '🚀 Trusted by 10,000+ teams', showBadge: true, bgGradient: true,
+          bgColor: '#0f172a', textColor: '#ffffff', accentColor: '#6366f1',
+        },
+      },
+      {
+        id: uid(), type: 'Features',
+        props: {
+          sectionTitle: 'Everything Your Team Needs',
+          sectionSubtitle: 'Powerful features that remove friction and help your team focus on what matters most.',
+          bgColor: '#ffffff', textColor: '#0f172a', accentColor: '#6366f1',
+          features: [
+            { id: '1', icon: '⚡', title: 'Lightning Fast',          desc: 'Sub-second performance across all devices and network conditions, globally.' },
+            { id: '2', icon: '🤝', title: 'Real-Time Collaboration', desc: 'Work simultaneously with your entire team — no conflicts, no confusion.' },
+            { id: '3', icon: '🔒', title: 'Enterprise Security',     desc: 'SOC 2 Type II certified with end-to-end encryption and SAML SSO.' },
+            { id: '4', icon: '📊', title: 'Advanced Analytics',      desc: 'Deep insights into every workflow with customizable dashboards.' },
+            { id: '5', icon: '🔧', title: '500+ Integrations',       desc: 'Connects with Slack, GitHub, Figma, Jira, Salesforce, and more.' },
+            { id: '6', icon: '🌍', title: 'Global Scale',            desc: '99.99% uptime SLA backed by infrastructure across 6 global regions.' },
+          ],
+        },
+      },
+      {
+        id: uid(), type: 'Pricing',
+        props: {
+          sectionTitle: 'Simple, Transparent Pricing',
+          sectionSubtitle: 'Choose the plan that fits your needs. No hidden fees, ever.',
+          bgColor: '#ffffff', textColor: '#0f172a', accentColor: '#6366f1',
+          plans: [
+            { id: '1', name: 'Starter',  price: '$0',  period: '/mo', description: 'Perfect to get started',  features: ['Core Features', 'Basic Support', '5 Projects', 'Community'],                        highlighted: false, cta: 'Get Started' },
+            { id: '2', name: 'Pro',      price: '$29', period: '/mo', description: 'For growing teams',        features: ['Everything in Starter', 'Priority Support', 'Unlimited Projects', 'Analytics'],    highlighted: true,  cta: 'Start Free Trial' },
+            { id: '3', name: 'Business', price: '$99', period: '/mo', description: 'For large organizations', features: ['Everything in Pro', 'Dedicated Support', 'Custom Integrations', 'SLA'],              highlighted: false, cta: 'Contact Sales' },
+          ],
+        },
+      },
+      {
+        id: uid(), type: 'Testimonials',
+        props: {
+          sectionTitle: "What Our Clients Say",
+          sectionSubtitle: "Don't take our word for it — hear from the people who matter most.",
+          bgColor: '#f8fafc', textColor: '#0f172a', accentColor: '#6366f1',
+          testimonials: [
+            { id: '1', name: 'Sarah Mitchell',  role: 'Client at Nexus',   avatar: 'SM', avatarColor: '#6366f1', text: 'Absolutely exceeded every expectation. The attention to detail and quality of service is unmatched.', rating: 5 },
+            { id: '2', name: 'James Rodriguez', role: 'Returning Customer', avatar: 'JR', avatarColor: '#10b981', text: "I've been coming back for years. The consistency and care they put into everything is remarkable.", rating: 5 },
+            { id: '3', name: 'Emily Chen',      role: 'Verified Customer',  avatar: 'EC', avatarColor: '#f59e0b', text: 'A truly exceptional experience from start to finish. I recommend them to everyone I know.', rating: 5 },
+          ],
+        },
+      },
+      {
+        id: uid(), type: 'CTA',
+        props: {
+          headline: 'Ready to Transform How You Work?',
+          subheadline: 'Join 10,000+ teams already using Nexus. Start free — no credit card required.',
+          primaryCTA: 'Start Free — No Card Needed', primaryCTAUrl: '#',
+          secondaryCTA: 'Talk to Sales', secondaryCTAUrl: '#',
+          bgColor: '#6366f1', bgGradient: true, textColor: '#ffffff', accentColor: '#8b5cf6',
+        },
+      },
+      {
+        id: uid(), type: 'Footer',
+        props: {
+          brand: 'Nexus', tagline: 'The future of work, today.',
+          copyright: `© ${new Date().getFullYear()} Nexus. All rights reserved.`,
+          bgColor: '#0f172a', textColor: '#94a3b8', accentColor: '#6366f1',
+          columns: {
+            Product:   ['Features', 'Pricing', 'Changelog', 'Roadmap'],
+            Company:   ['About', 'Blog', 'Careers', 'Press'],
+            Resources: ['Docs', 'API Reference', 'Status', 'Community'],
+            Legal:     ['Privacy', 'Terms', 'Security', 'Cookies'],
+          },
+        },
+      },
+    ]
+
+    const schema = { id: 'canvas', theme, components }
+    const workspace = {
+      pages: [{ id: 'page-home', name: 'Home', schema }],
+      activePageId: 'page-home',
+      appMode: 'builder',
+    }
+
+    localStorage.setItem('zf-workspace', JSON.stringify(workspace))
+
+    // Redirect to the app
+    setTimeout(() => { window.location.href = '/' }, 400)
+  </script>
+</body>
+</html>

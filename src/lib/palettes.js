@@ -1,0 +1,103 @@
+/**
+ * 12 hand-curated professional palette + font pairings.
+ * Each entry contains only theme-compatible keys so the whole object
+ * (minus name/emoji/tag) can be spread directly into schema.theme.
+ */
+export const PALETTES = [
+  {
+    name: 'Midnight Indigo',  emoji: '🌙', tag: 'Classic SaaS',
+    primaryColor: '#6366f1',  secondaryColor: '#8b5cf6',
+    fontFamily: '"Inter", system-ui, sans-serif',
+    borderRadius: '0.75rem',
+    headingColor: '#0f172a',  bodyColor: '#64748b',
+    pageBg: '#ffffff',        darkBg: '#0f172a',
+  },
+  {
+    name: 'Ocean Depths',     emoji: '🌊', tag: 'Tech / Bold',
+    primaryColor: '#0284c7',  secondaryColor: '#0891b2',
+    fontFamily: '"Poppins", sans-serif',
+    borderRadius: '1rem',
+    headingColor: '#0c4a6e',  bodyColor: '#475569',
+    pageBg: '#f0f9ff',        darkBg: '#082f49',
+  },
+  {
+    name: 'Ember Rose',       emoji: '🌹', tag: 'Vibrant / Creative',
+    primaryColor: '#e11d48',  secondaryColor: '#f97316',
+    fontFamily: '"Poppins", sans-serif',
+    borderRadius: '0.75rem',
+    headingColor: '#1c1917',  bodyColor: '#78716c',
+    pageBg: '#fff9f9',        darkBg: '#270010',
+  },
+  {
+    name: 'Forest Sage',      emoji: '🌿', tag: 'Natural / Calm',
+    primaryColor: '#059669',  secondaryColor: '#10b981',
+    fontFamily: '"Lato", sans-serif',
+    borderRadius: '0.5rem',
+    headingColor: '#064e3b',  bodyColor: '#6b7280',
+    pageBg: '#f0fdf4',        darkBg: '#052e16',
+  },
+  {
+    name: 'Royal Purple',     emoji: '👑', tag: 'Elegant / Editorial',
+    primaryColor: '#7c3aed',  secondaryColor: '#a855f7',
+    fontFamily: '"Playfair Display", serif',
+    borderRadius: '0.5rem',
+    headingColor: '#1e0a4c',  bodyColor: '#6b7280',
+    pageBg: '#faf5ff',        darkBg: '#1e0a4c',
+  },
+  {
+    name: 'Sunset Gold',      emoji: '🌅', tag: 'Warm / Premium',
+    primaryColor: '#d97706',  secondaryColor: '#f59e0b',
+    fontFamily: '"Lato", sans-serif',
+    borderRadius: '0.375rem',
+    headingColor: '#1c1917',  bodyColor: '#78716c',
+    pageBg: '#fffbeb',        darkBg: '#1a0a00',
+  },
+  {
+    name: 'Slate Noir',       emoji: '⬛', tag: 'Minimal / Sharp',
+    primaryColor: '#334155',  secondaryColor: '#475569',
+    fontFamily: '"Inter", system-ui, sans-serif',
+    borderRadius: '0.25rem',
+    headingColor: '#0f172a',  bodyColor: '#64748b',
+    pageBg: '#f8fafc',        darkBg: '#0f172a',
+  },
+  {
+    name: 'Coral Reef',       emoji: '🪸', tag: 'Playful / Energetic',
+    primaryColor: '#f43f5e',  secondaryColor: '#fb923c',
+    fontFamily: '"Poppins", sans-serif',
+    borderRadius: '1rem',
+    headingColor: '#0f172a',  bodyColor: '#64748b',
+    pageBg: '#fff1f2',        darkBg: '#1a0010',
+  },
+  {
+    name: 'Arctic Blue',      emoji: '🧊', tag: 'Corporate / Clean',
+    primaryColor: '#3b82f6',  secondaryColor: '#06b6d4',
+    fontFamily: '"Roboto", sans-serif',
+    borderRadius: '0.75rem',
+    headingColor: '#1e3a5f',  bodyColor: '#64748b',
+    pageBg: '#eff6ff',        darkBg: '#1e3a5f',
+  },
+  {
+    name: 'Cherry Blossom',   emoji: '🌸', tag: 'Soft / Feminine',
+    primaryColor: '#ec4899',  secondaryColor: '#f472b6',
+    fontFamily: '"Playfair Display", serif',
+    borderRadius: '9999px',
+    headingColor: '#500724',  bodyColor: '#9d174d',
+    pageBg: '#fdf2f8',        darkBg: '#500724',
+  },
+  {
+    name: 'Terminal Green',   emoji: '💻', tag: 'Developer / Retro',
+    primaryColor: '#16a34a',  secondaryColor: '#22c55e',
+    fontFamily: '"JetBrains Mono", monospace',
+    borderRadius: '0.25rem',
+    headingColor: '#052e16',  bodyColor: '#4b5563',
+    pageBg: '#f0fdf4',        darkBg: '#0a1a0a',
+  },
+  {
+    name: 'Dusk Violet',      emoji: '🌆', tag: 'Modern / Dreamy',
+    primaryColor: '#8b5cf6',  secondaryColor: '#ec4899',
+    fontFamily: '"Poppins", sans-serif',
+    borderRadius: '1rem',
+    headingColor: '#1e1b4b',  bodyColor: '#6b7280',
+    pageBg: '#f5f3ff',        darkBg: '#1e1b4b',
+  },
+]

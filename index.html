@@ -1,0 +1,44 @@
+<!doctype html>
+<html lang="en" class="dark">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>ZaraForge — Visual Creative Platform</title>
+
+    <!-- ── Content Security Policy ─────────────────────────────────────────── -->
+    <!-- Blocks XSS, enforces HTTPS-only scripts, prevents clickjacking.       -->
+    <!-- Tighten script-src domains before shipping to production.             -->
+    <meta http-equiv="Content-Security-Policy" content="
+      default-src 'self';
+      script-src  'self' 'unsafe-inline' https://www.googletagmanager.com https://connect.facebook.net https://sc-static.net https://snap.licdn.com https://static.ads-twitter.com;
+      style-src   'self' 'unsafe-inline' https://fonts.googleapis.com;
+      font-src    'self' https://fonts.gstatic.com data:;
+      img-src     'self' data: blob: https:;
+      media-src   'self' blob:;
+      connect-src 'self' https:;
+      frame-src   'none';
+      object-src  'none';
+      base-uri    'self';
+      form-action 'self';
+    " />
+    <!-- X-Frame-Options via meta (full header needed server-side) -->
+    <meta http-equiv="X-Frame-Options" content="DENY" />
+    <meta http-equiv="X-Content-Type-Options" content="nosniff" />
+    <meta http-equiv="Referrer-Policy" content="strict-origin-when-cross-origin" />
+    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>⚡</text></svg>" />
+    <!-- GitHub Pages SPA: restore path from 404 redirect -->
+    <script>
+      (function(){
+        var p = new URLSearchParams(location.search).get('p');
+        if (p) {
+          var q = new URLSearchParams(location.search).get('q');
+          history.replaceState(null, '', '/' + p + (q ? '?' + q : '') + location.hash);
+        }
+      })();
+    </script>
+  </head>
+  <body class="bg-builder-bg text-white antialiased">
+    <div id="root"></div>
+    <script type="module" src="/src/main.jsx"></script>
+  </body>
+</html>

@@ -1,0 +1,10 @@
+{
+  "nav_studio":"スタジオ","nav_builder":"ビルダー","nav_logo":"ロゴメーカー","nav_bgremover":"背景除去","nav_video":"動画エディター","nav_invite":"チームを招待","nav_history":"履歴","nav_export_wav":"WAVエクスポート","nav_security":"セキュリティ","nav_publish":"アプリを公開","nav_ai_view":"AIビュー","nav_code_view":"コードビュー","nav_live":"ライブ",
+  "chat_placeholder":"何かを作るようにお願いしてください…","chat_send":"送信","chat_tab_chat":"チャット","chat_tab_components":"コンポーネント","chat_tab_blueprint":"ブループリント","chat_tab_infra":"インフラ","chat_new":"新規","chat_history":"履歴","chat_thinking":"考え中…","chat_empty":"何か作るようにお願いしてください。「〜を作って」と始めましょう。",
+  "blueprint_title":"アプリケーション構築ブループリント","blueprint_idle_desc":"チャットでプロンプトを送信して、インフラがライブで構築される様子をご覧ください。","blueprint_task_1":"レイアウトリクエストを分析してUIコンポーネントシステムをコンパイル","blueprint_task_2":"セキュアなユーザー認証テーブルを構築","blueprint_task_3":"PostgreSQLクラウドデータベーススキーマ層を生成","blueprint_task_4":"自動バックエンドマイクロサービス機能とルーティングを接続","blueprint_task_5":"コード実行ループを最適化し、CDNエンドポイントにデプロイ","blueprint_running":"構築中 — {pct}%完了","blueprint_paused":"一時停止 — サインアップして再開","blueprint_done_status":"✓ 全システムオンライン","blueprint_done_title":"アプリが正常にデプロイされました！","blueprint_done_sub":"アプリはライブで全ブレークポイントでレンダリング中です。","blueprint_new_project":"新規プロジェクト","blueprint_milestone":"マイルストーン {n} / {total}","blueprint_all_done":"{total} / {total} マイルストーン完了",
+  "landing_hero_title":"自分を無限だと思え。","landing_hero_sub":"一文を本番対応アプリに変換する唯一のAIプラットフォーム。","landing_cta_primary":"無料で始める","landing_cta_secondary":"デモを見る",
+  "auth_sign_in":"サインイン","auth_sign_up":"サインアップ","auth_sign_out":"サインアウト","auth_profile":"プロフィール","auth_free_plan":"無料プラン","auth_pro_plan":"プロプラン","auth_upgrade":"プロにアップグレード","auth_credits":"{n}クレジット残",
+  "common_save":"保存","common_cancel":"キャンセル","common_delete":"削除","common_edit":"編集","common_copy":"コピー","common_copied":"コピーしました！","common_close":"閉じる","common_loading":"読み込み中…","common_search":"検索…","common_new":"新規","common_or":"または",
+  "i18n_label":"言語","i18n_search":"言語を検索…","i18n_anchored":"優先","i18n_all":"すべての言語",
+  "canvas_empty_title":"キャンバスが空です","canvas_empty_sub":"AIと話して最初のページを生成してください。","sidebar_inspector":"インスペクター","sidebar_no_selection":"検査する要素を選択してください"
+}
