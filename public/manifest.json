@@ -1,0 +1,51 @@
+{
+  "name": "ZaraForge",
+  "short_name": "ZaraForge",
+  "description": "Build apps, music, and designs with AI. No code required.",
+  "start_url": "/",
+  "display": "standalone",
+  "orientation": "portrait-primary",
+  "theme_color": "#09090b",
+  "background_color": "#09090b",
+  "categories": ["productivity", "design", "developer"],
+  "lang": "en",
+  "icons": [
+    {
+      "src": "/zaraforge-logo.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "/zaraforge-logo.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ],
+  "shortcuts": [
+    {
+      "name": "App Builder",
+      "short_name": "Builder",
+      "description": "Open the AI app builder",
+      "url": "/?mode=builder",
+      "icons": [{ "src": "/zaraforge-logo.png", "sizes": "96x96" }]
+    },
+    {
+      "name": "Music Studio",
+      "short_name": "Studio",
+      "description": "Open the music production studio",
+      "url": "/?mode=studio",
+      "icons": [{ "src": "/zaraforge-logo.png", "sizes": "96x96" }]
+    }
+  ],
+  "screenshots": [
+    {
+      "src": "/zaraforge-logo.png",
+      "sizes": "1280x720",
+      "type": "image/png",
+      "form_factor": "wide",
+      "label": "ZaraForge App Builder"
+    }
+  ]
+}

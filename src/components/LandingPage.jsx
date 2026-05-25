@@ -1,7 +1,11 @@
 import { useState, useEffect, useRef } from 'react'
 import { useBuilderStore } from '../store/builderStore'
 import { useMarketingStore } from '../store/marketingStore'
+import { useAuthStore } from '../store/authStore'
 import { useTranslation } from '../i18n'
+
+// Formspree form ID — sign up free at formspree.io and paste your ID here
+const FORMSPREE_ID = 'YOUR_FORM_ID'
 
 // ── Pre-computed data (stable across renders) ─────────────────────────────────
 const MATRIX_CELLS = Array.from({ length: 40 }, (_, i) => ({
@@ -341,6 +345,7 @@ const CSS = `
 // ── Main ──────────────────────────────────────────────────────────────────────
 export default function LandingPage() {
   const { enterApp } = useBuilderStore()
+  const { setShowAuthModal } = useAuthStore()
   const { landingCopy, marketingPricing } = useMarketingStore()
   const { t } = useTranslation()
   const [navScrolled, setNavScrolled]   = useState(false)
@@ -363,16 +368,33 @@ export default function LandingPage() {
   const launch   = (mode) => enterApp(mode)
   const scrollTo = (id)   => document.getElementById(id)?.scrollIntoView({ behavior: 'smooth' })
 
-  const handleCTA = (mode = 'builder') => setEmailGate(true)
+  const [emailMode, setEmailMode] = useState('builder') // which mode to enter after capture
+  const handleCTA = (mode = 'builder') => { setEmailMode(mode); setEmailGate(true) }
+
+  const handleSignIn = () => {
+    enterApp('builder')
+    setTimeout(() => setShowAuthModal(true, 'login'), 80)
+  }
 
   const submitEmail = (e) => {
     e.preventDefault()
     if (!capturedEmail.trim() || !/\S+@\S+\.\S+/.test(capturedEmail)) {
       setEmailError('Enter a valid email to continue.'); return
     }
-    try { localStorage.setItem('zf-lead-email', capturedEmail.trim()) } catch {}
+    const email = capturedEmail.trim()
+    try { localStorage.setItem('zf-lead-email', email) } catch {}
+
+    // Send lead to Formspree (fire-and-forget)
+    if (FORMSPREE_ID && FORMSPREE_ID !== 'YOUR_FORM_ID') {
+      fetch(`https://formspree.io/f/${FORMSPREE_ID}`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', Accept: 'application/json' },
+        body: JSON.stringify({ email, source: 'landing_cta', mode: emailMode }),
+      }).catch(() => {})
+    }
+
     setEmailGate(false)
-    launch('builder')
+    launch(emailMode)
   }
 
   const annualPrice   = 199
@@ -420,7 +442,7 @@ export default function LandingPage() {
             </div>
 
             <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginLeft: 'auto' }}>
-              <button className="lp-nav-btn lp-nav-sign-in" onClick={() => launch('builder')} style={{
+              <button className="lp-nav-btn lp-nav-sign-in" onClick={handleSignIn} style={{
                 fontSize: 13.5, fontWeight: 600, color: 'rgba(255,255,255,0.45)',
                 background: 'none', border: '1px solid transparent', cursor: 'pointer',
                 padding: '8px 16px', borderRadius: 10, fontFamily: 'inherit',
@@ -579,7 +601,7 @@ export default function LandingPage() {
             }}>
 
               {/* BUILDER — spans 2 cols */}
-              <div className="lp-glass lp-c-builder" style={{ ...glass, gridColumn: '1 / 3', padding: 32, cursor: 'pointer' }} onClick={() => launch('builder')}>
+              <div className="lp-glass lp-c-builder" style={{ ...glass, gridColumn: '1 / 3', padding: 32, cursor: 'pointer' }} onClick={() => handleCTA('builder')}>
                 <div style={{ display: 'flex', alignItems: 'center', gap: 12, marginBottom: 20 }}>
                   <span style={{ fontSize: 26 }}>📐</span>
                   <div>
@@ -603,7 +625,7 @@ export default function LandingPage() {
               </div>
 
               {/* STUDIO — right col, spans 2 rows */}
-              <div className="lp-glass lp-c-studio" style={{ ...glass, padding: 28, gridColumn: '3', gridRow: '1 / 3', cursor: 'pointer', display: 'flex', flexDirection: 'column' }} onClick={() => launch('studio')}>
+              <div className="lp-glass lp-c-studio" style={{ ...glass, padding: 28, gridColumn: '3', gridRow: '1 / 3', cursor: 'pointer', display: 'flex', flexDirection: 'column' }} onClick={() => handleCTA('studio')}>
                 <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 16 }}>
                   <span style={{ fontSize: 22 }}>🎤</span>
                   <div>
@@ -628,7 +650,7 @@ export default function LandingPage() {
               </div>
 
               {/* VIDEO EDITOR */}
-              <div className="lp-glass lp-c-video" style={{ ...glass, padding: 28, cursor: 'pointer' }} onClick={() => launch('video')}>
+              <div className="lp-glass lp-c-video" style={{ ...glass, padding: 28, cursor: 'pointer' }} onClick={() => handleCTA('video')}>
                 <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 16 }}>
                   <span style={{ fontSize: 22 }}>🎬</span>
                   <div>
@@ -644,7 +666,7 @@ export default function LandingPage() {
               </div>
 
               {/* LOGO MAKER */}
-              <div className="lp-glass lp-c-logo" style={{ ...glass, padding: 28, cursor: 'pointer' }} onClick={() => launch('logo')}>
+              <div className="lp-glass lp-c-logo" style={{ ...glass, padding: 28, cursor: 'pointer' }} onClick={() => handleCTA('logo')}>
                 <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 12 }}>
                   <span style={{ fontSize: 22 }}>🎨</span>
                   <div>
@@ -661,7 +683,7 @@ export default function LandingPage() {
               </div>
 
               {/* BG REMOVER */}
-              <div className="lp-glass lp-c-bgr" style={{ ...glass, padding: 28, cursor: 'pointer' }} onClick={() => launch('bgremover')}>
+              <div className="lp-glass lp-c-bgr" style={{ ...glass, padding: 28, cursor: 'pointer' }} onClick={() => handleCTA('bgremover')}>
                 <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 12 }}>
                   <span style={{ fontSize: 22 }}>✂️</span>
                   <div>
