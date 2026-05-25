@@ -244,7 +244,7 @@ function DevicePanel({ pos, onClose }) {
 export default function DeviceConnectWidget() {
   const { showPanel, setShowPanel, connected, connecting, unreadCount } = useDeviceStore()
   const { user } = useAuthStore()
-  const isPro = user?.plan === 'Pro'
+  const isPro = user?.plan === 'Pro' || user?.isAdmin === true
   const btnRef = useRef(null)
   const [panelPos, setPanelPos] = useState({ top: 56, right: 16 })
   const [showProGate, setShowProGate] = useState(false)

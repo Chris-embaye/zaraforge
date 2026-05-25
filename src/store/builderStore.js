@@ -417,7 +417,8 @@ export const useBuilderStore = create((set, get) => ({
     const isPro = user?.plan === 'Pro'
     const isLoggedIn = !!user
 
-    if (isLoggedIn && !isPro && freeGenCount >= 3) {
+    const isAdmin = user?.isAdmin === true
+    if (isLoggedIn && !isPro && !isAdmin && freeGenCount >= 3) {
       set({ showProGate: true })
       return
     }
