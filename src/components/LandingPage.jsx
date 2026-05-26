@@ -5,7 +5,7 @@ import { useAuthStore } from '../store/authStore'
 import { useTranslation } from '../i18n'
 
 // Formspree form ID — sign up free at formspree.io and paste your ID here
-const FORMSPREE_ID = 'YOUR_FORM_ID'
+const FORMSPREE_ID = 'mojbknzv'
 
 // ── Pre-computed data (stable across renders) ─────────────────────────────────
 const MATRIX_CELLS = Array.from({ length: 40 }, (_, i) => ({
@@ -401,7 +401,9 @@ export default function LandingPage() {
   const monthlyPrice  = marketingPricing?.pro?.monthly ?? 29
   const displayPrice  = billing === 'annual' ? annualPrice : monthlyPrice
   const displayPeriod = billing === 'annual' ? '/yr' : '/mo'
-  const stripeLink    = 'https://buy.stripe.com/6oU3cwa6T5gK3NeeOD3ZK01'
+  const stripeLink    = billing === 'annual'
+    ? 'https://buy.stripe.com/3cIdRa2EraB45Vm6I73ZK02'
+    : 'https://buy.stripe.com/6oU3cwa6T5gK3NeeOD3ZK01'
 
   // Glass card base style
   const glass = {

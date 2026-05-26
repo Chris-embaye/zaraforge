@@ -5,7 +5,7 @@ import { useBuilderStore } from '../store/builderStore'
 const MONTHLY_PRICE = 29
 const ANNUAL_PRICE  = 199  // ~$16.58/mo
 const STRIPE_MONTHLY = 'https://buy.stripe.com/6oU3cwa6T5gK3NeeOD3ZK01'
-const STRIPE_ANNUAL  = 'https://buy.stripe.com/6oU3cwa6T5gK3NeeOD3ZK01' // update when annual link is created
+const STRIPE_ANNUAL  = 'https://buy.stripe.com/3cIdRa2EraB45Vm6I73ZK02'
 
 const PRO_PERKS = [
   { icon: '🤖', text: 'Unlimited AI generations' },
